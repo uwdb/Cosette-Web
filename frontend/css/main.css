@@ -5,4 +5,15 @@
 
 body {
 	text-align: center;
+	padding-top: 1rem;
+
+}
+
+.starter-template {
+  padding: 1rem 1rem;
+  text-align: center;
+}
+
+nav {
+	font-size: 10pt;
 }

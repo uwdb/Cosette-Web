@@ -11,21 +11,33 @@
 
 <body>
 
+<nav class="navbar navbar-fixed-top">
+  <ul class="nav navbar-nav">
+    <li class="nav-item active">
+      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">About</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Contact</a>
+    </li>
+  </ul>
+</nav>
+
 <div class="container">
     <div class="starter-template">
         <h1>Cosette</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        <p class="lead">SQL query equivalence checking is simple.</p>
     </div>
     <div id="editor"></div>
 </div><!-- /.container -->
-
-
     
 <script>
     
-    default_editor_content = "SELECT city, COUNT(id) AS users_count FROM users WHERE group_name = 'salesman' AND created > '2011-05-21' GROUP BY 1 ORDER BY 2 DESC"
+    default_editor_content = "SELECT city, COUNT(id) AS users_count \nFROM users \nWHERE group_name = 'salesman' AND created > '2011-05-21' \nGROUP BY 1 \nORDER BY 2 DESC";
 
-    $("#editor").text();
+    $("#editor").text(default_editor_content);
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/sql");
