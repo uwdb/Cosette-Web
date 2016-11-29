@@ -1,9 +1,3 @@
-#editor { 
-    height: 500px;
-    top: 10px;
-    bottom: 100px;
-}
-
 body {
 	text-align: center;
 	padding-top: 1rem;
@@ -17,3 +11,29 @@ body {
 
 nav {
 	font-size: 10pt;
+}
+
+#wrapper {
+	width: 100%;
+	/*border: 1px solid black;*/
+	position: relative;
+	height: 500px;
+	float: left;
+}
+
+#editor {
+	width: 65%;
+	height: 100%;
+	/*border: 1px solid red;*/
+	position: relative;
+	float: left;
+}
+
+#feedback {
+	border: 1px solid Grey;
+	position: relative;
+	text-align: left;
+	float: right;
+	width: 35%;
+	height: 100%;
+}

@@ -25,13 +25,18 @@
   </ul>
 </nav>
 
+<div class="starter-template">
+    <h1>Cosette</h1>
+    <p class="lead">SQL query equivalence checking is simple.</p>
+</div>
+
 <div class="container">
-    <div class="starter-template">
-        <h1>Cosette</h1>
-        <p class="lead">SQL query equivalence checking is simple.</p>
+
+    <div id="wrapper">
+        <div id="editor"></div>
+        <div id="feedback" class="well">This is the running result.</div>
     </div>
 
-    <div id="editor"></div>
 
     <button type="button" class="btn btn-success">Submit</button>
 </div><!-- /.container -->
@@ -45,7 +50,7 @@
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/sql");
     editor.setOptions({
-      fontSize: "12pt"
+      fontSize: "11pt"
     });
 </script>
 </body>
