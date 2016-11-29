@@ -33,7 +33,7 @@
 
     <div id="editor"></div>
 
-    <button type="button" class="btn btn-success">Submit</button>
+    <button type="button" class="btn btn-success submit-btn">Submit</button>
 </div><!-- /.container -->
     
 <script>
@@ -47,6 +47,19 @@
     editor.setOptions({
       fontSize: "12pt"
     });
+    
+    $(function() {
+        $('.submit-btn').click(function() {
+            var query = editor.getValue();
+            $.ajax({
+                data: {"query" : query},
+                success: function() {
+                
+                }
+            });
+        });
+    });    
+
 </script>
 </body>
 </html>
