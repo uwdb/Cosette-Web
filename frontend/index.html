@@ -57,6 +57,7 @@
         $('.submit-btn').click(function() {
             var query = editor.getValue();
             $.ajax({
+                url: '/solve',
                 data: {"query" : query},
                 success: function() {
                 
