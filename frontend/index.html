@@ -58,8 +58,8 @@
             var query = editor.getValue();
             $.ajax({
                 data: {"query" : query},
-                success: function() {
-                
+                success: function(data) {
+                    $("#feedback").text(data);
                 }
             });
         });
