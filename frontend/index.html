@@ -58,6 +58,7 @@
             var query = editor.getValue();
             $.ajax({
                 url: '/solve',
+                method: 'POST',
                 data: {"query" : query},
                 success: function(data) {
                     $("#feedback").text(data);
