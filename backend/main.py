@@ -16,4 +16,4 @@ def index():
 @app.route('/solve', methods = ['POST'])
 def solve():
     query = request.form.get('query')
-    return "asdf"
+    return query
