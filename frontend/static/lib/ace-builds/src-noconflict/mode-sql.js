@@ -7,7 +7,7 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var SqlHighlightRules = function() {
 
     var keywords = (
-        "select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
+        "schema|query|verify|select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
         "when|else|end|type|left|right|join|on|outer|desc|asc|union|create|table|primary|key|if|" +
         "foreign|not|references|default|null|inner|cross|natural|database|drop|grant"
     );
@@ -48,6 +48,9 @@ var SqlHighlightRules = function() {
             token : "string",           // ' string
             regex : "'.*?'"
         }, {
+		    token : "query",
+            regex : "`.*?`",
+		}, {
             token : "constant.numeric", // float
             regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
         }, {
@@ -75,16 +78,16 @@ oop.inherits(SqlHighlightRules, TextHighlightRules);
 exports.SqlHighlightRules = SqlHighlightRules;
 });
 
-ace.define("ace/mode/sql",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/sql_highlight_rules","ace/range"], function(require, exports, module) {
+ace.define("ace/mode/sql",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/sql_highlight_rules"], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var SqlHighlightRules = require("./sql_highlight_rules").SqlHighlightRules;
-var Range = require("../range").Range;
 
 var Mode = function() {
     this.HighlightRules = SqlHighlightRules;
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
