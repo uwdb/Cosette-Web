@@ -1,0 +1,4 @@
+[submodule "cosettesolver"]
+	path = backend/Cosette
+	url = https://github.com/uwdb/Cosette.git
+	branch = master
