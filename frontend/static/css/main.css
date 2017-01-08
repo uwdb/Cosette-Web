@@ -38,3 +38,11 @@ nav {
 	width: 35%;
 	height: 100%;
 }
+
+.ace_coqKeyword {
+    color: rgb(147, 15, 128);
+}
+
+.ace_keyword {
+    color: blue !important;
+}

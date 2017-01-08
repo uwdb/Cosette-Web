@@ -5,10 +5,14 @@ var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var SqlHighlightRules = function() {
+    
+    var coqKeywords = (
+        "schema|query|verify|table"
+    );
 
     var keywords = (
-        "schema|query|verify|select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
-        "when|else|end|type|left|right|join|on|outer|desc|asc|union|create|table|primary|key|if|" +
+        "select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
+        "when|else|end|type|left|right|join|on|outer|desc|asc|union|create|primary|key|if|" +
         "foreign|not|references|default|null|inner|cross|natural|database|drop|grant"
     );
 
@@ -29,6 +33,7 @@ var SqlHighlightRules = function() {
     var keywordMapper = this.createKeywordMapper({
         "support.function": builtinFunctions,
         "keyword": keywords,
+        "coqKeyword": coqKeywords,
         "constant.language": builtinConstants,
         "storage.type": dataTypes
     }, "identifier", true);
@@ -48,9 +53,6 @@ var SqlHighlightRules = function() {
             token : "string",           // ' string
             regex : "'.*?'"
         }, {
-		    token : "query",
-            regex : "`.*?`",
-		}, {
             token : "constant.numeric", // float
             regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
         }, {
