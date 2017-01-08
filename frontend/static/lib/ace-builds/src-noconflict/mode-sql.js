@@ -7,7 +7,7 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var SqlHighlightRules = function() {
     
     var coqKeywords = (
-        "schema|query|verify|table"
+        "schema|query|verify|predicate|table"
     );
 
     var keywords = (

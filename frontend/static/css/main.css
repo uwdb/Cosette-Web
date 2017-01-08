@@ -46,3 +46,12 @@ nav {
 .ace_keyword {
     color: blue !important;
 }
+
+.sample-btn-row {
+    text-align: left;
+    margin-bottom: 4px;
+}
+
+.sample {
+    margin-right: 5px;
+}

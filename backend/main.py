@@ -6,6 +6,8 @@ from flask import Flask, render_template, request
 template_dir = os.path.abspath('../frontend')
 static_dir = os.path.abspath('../frontend/static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+app.debug = True
+
 
 # Index page for GET
 @app.route('/')
