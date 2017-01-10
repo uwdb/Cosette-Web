@@ -20,7 +20,6 @@
     <div class="sample-btn-row">
         <button type="button" class="btn btn-secondary sample-btn sample1">Sample 1</button>
         <button type="button" class="btn btn-secondary sample-btn sample2">Sample 2</button>
-        <button type="button" class="btn btn-secondary sample-btn sample3">Sample 3</button>
     </div>
     <div id="wrapper">
         <div id="editor"></div>
@@ -39,8 +38,7 @@
 
     var sample_1 = "schema s1(x:ty0, ya:ty1, ??);\nschema s2(yb:ty1, ??);\n\ntable a(s1);\ntable b(s2);\n\nquery q1\n`select distinct x.x as ax from a x, b y where x.ya = y.yb`;\n\nquery q2\n`select distinct x.x as ax from a x, a y, b z where x.x = y.x and x.ya = z.yb`;\n\nverify q1 q2;";
     var sample_2 = "schema sa(??);\nschema sb(??);\n\ntable a(sa);\ntable b(sb);\n\npredicate b0(sb);\npredicate b1(sa,sb);\n\nquery q1\n`select * from a x, (select * from b y where b0(y)) z where b1(x, z)`;\n\nquery q2\n`select * from a x, b y where b0(y) and b1(x, y)`;\n\nverify q1 q2;"
-    var sample_3 = "schema s(??);\n\ntable a(s);\n\npredicate b0(s);\npredicate b1(s);\n\nquery q1\n`select distinct * from a x where b0(x) OR b1(x)`;\n\nquery q2\n`select distinct * from ((select * from a x where b0(x)) UNION ALL (select * from a y where b1(y))) z`;\n\nverify q1 q2;"
-
+    
     // editor setting
     $("#editor").text(sample_1);
     var editor = ace.edit("editor");
