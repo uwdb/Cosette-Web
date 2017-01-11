@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 # Main api routes for frontend
 
 import os
 import subprocess
+from time import sleep
 
 from flask import Flask, render_template, request
 template_dir = os.path.abspath('../frontend')
@@ -38,4 +40,21 @@ def solve():
         ret = ret + "2    | 9        | 2    "
         return ret
     else:
-        return "I am not integers"
+        ret = u""" EQUAL \n\n
+Theorem A:  forall (Γ s1 s2: Schema) (r1: Relation s1) (r2: Relation Γ s2) (θ: Pred (Γ ++ s2 ++ s1)),  \n
+ ⟦ Γ ⊢ (SELECT * FROM table r1, table r2 WHERE θ ) : _ ⟧ = \n
+ ⟦ Γ ⊢ (SELECT * FROM (table r1 SEMI_JOIN table r2 ON θ), r1 WHERE θ) : _ ⟧. \n 
+\n
+Proof. \n
+    semi_ring. \n
+    apply path_universe_uncurried. \n
+    apply hprop_prod_l'. \n
+    intros [h0 h1]. \n
+    apply tr. \n
+    destruct t as [t1 t2]. \n
+    refine (t2; _). \n
+    cbn in *. \n
+    refine (h1, h0). \n 
+Qed."""
+        sleep(0.2)
+        return ret

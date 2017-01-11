@@ -19,7 +19,7 @@
 <div class="container" style="margin-bottom: 10px;">
     <div class="sample-btn-row">
         <button type="button" class="btn btn-secondary sample-btn sample1">Count Bug</button>
-        <button type="button" class="btn btn-secondary sample-btn sample2">344Q1</button>
+        <button type="button" class="btn btn-secondary sample-btn sample2">θ Semi Join Intro</button>
     </div>
     <div id="wrapper">
         <div id="editor"></div>
@@ -37,7 +37,7 @@
 <script>
 
     var sample_1 = " schema s(pnum:int, shipdate:int); \n schema p(pnum:int, qoh:int); \n \n table parts(p); \n table supply(s); \n\n query q1 \n `select x.pnum as xp \n  from parts x \n  where qoh = (select count(y.shipdate) \n       	       from supply y \n	           where y.pnum = parts.pnum AND shipdate < 10)`;\n \n query q2 \n `select x.pnum as xp \n  from parts x, (select y.pnum as suppnum, count(y.shipdate) as ct \n                 from supply y where y.shipdate < 10\n	             group by y.pnum) temp \n  where x.qoh = temp.ct AND x.pnum = temp.suppnum`; \n \n verify q1 q2;";
-    var sample_2 = " schema su(usrUid:int, usrName:str, ??); \n schema sp(picUid:int, picSize:int, ??);\n\n table usr(su); \n table pic(sp); \n \n predicate b1(sp); \n predicate b2(sp); \n \n query q1 \n `select distinct x.usrUid as xid, x.usrName as xname \n  from usr x, pic u, pic v, pic w \n  where x.usrUid = u.picUid AND x.usrUid = v.picUid AND\n        x.usrUid = w.picUid AND w.picSize = v.picSize AND\n        b1(u) AND b2(v)`; \n \n query q2 \n `select distinct x.usrUid as xid, x.usrName as xname \n  from usr x, pic u, pic v\n  where x.usrUid = u.picUid AND x.usrUid = v.picUid AND\n        b1(u) AND b2(v)`;\n \n verify q1 q2;";
+    var sample_2 = " schema s1(??); \n schema s2(??); \n\n table r1(s1); \n table r2(s2); \n\n predicate θ(s2,s1); \n\n query q1 \n `select * from r1 x, r2 y where θ(x,y)`; \n query q2 \n `select * from (r2 SEMIJOIN r1 ON θ) x, r1 y where θ(x,y)`; \n \n verify q1 q2;";
     
     // editor setting
     $("#editor").text(sample_1);
