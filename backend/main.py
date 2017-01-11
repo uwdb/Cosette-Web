@@ -41,7 +41,7 @@ def solve():
         return ret
     else:
         ret = u""" EQUAL \n\n
-Theorem A:  forall (Γ s1 s2: Schema) (r1: Relation s1) (r2: Relation Γ s2) (θ: Pred (Γ ++ s2 ++ s1)),  \n
+Theorem A:  forall (Γ s1 s2: Schema) (r1: Relation s1) (r2: Relation s2) (θ: Pred (s2 ++ s1)),  \n
  ⟦ Γ ⊢ (SELECT * FROM table r1, table r2 WHERE θ ) : _ ⟧ = \n
  ⟦ Γ ⊢ (SELECT * FROM (table r1 SEMI_JOIN table r2 ON θ), r1 WHERE θ) : _ ⟧. \n 
 \n
