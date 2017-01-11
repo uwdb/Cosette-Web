@@ -22,25 +22,22 @@ nav {
 }
 
 #editor {
-	width: 64%;
+	width: 65%;
 	height: 100%;
-	border: 1px solid Grey;
-    margin-right: 10px;
+	/*border: 1px solid red;*/
 	position: relative;
 	float: left;
 }
 
 #feedback {
+	border: 1px solid Grey;
+	font: Monaco;
 	position: relative;
 	text-align: left;
-}
-
-.feedback-outer {
-	border: 1px solid Grey;
+	float: right;
 	padding: 5px 3px 5px 8px;
 	width: 35%;
-	height: 500px;
-	float: right;
+	height: 473px;
 }
 
 .ace_coqKeyword {
