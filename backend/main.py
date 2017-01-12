@@ -40,12 +40,7 @@ def solve():
         ret = ret + "2    | 9        | 2    "
         return ret
     else:
-        ret = u""" EQUAL \n\n
-Theorem A:  forall (Γ s1 s2: Schema) (r1: Relation s1) (r2: Relation s2) (θ: Pred (s2 ++ s1)),  \n
- ⟦ Γ ⊢ (SELECT * FROM table r1, table r2 WHERE θ ) : _ ⟧ = \n
- ⟦ Γ ⊢ (SELECT * FROM (table r1 SEMI_JOIN table r2 ON θ), r1 WHERE θ) : _ ⟧. \n 
-\n
-Proof. \n
+        ret = u"""Proof. \n
     semi_ring. \n
     apply path_universe_uncurried. \n
     apply hprop_prod_l'. \n
@@ -55,6 +50,7 @@ Proof. \n
     refine (t2; _). \n
     cbn in *. \n
     refine (h1, h0). \n 
-Qed."""
-        sleep(0.2)
+====================================\n
+EQUAL"""
+        sleep(1.0)
         return ret
