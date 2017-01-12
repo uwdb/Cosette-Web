@@ -21,13 +21,17 @@ nav {
 	float: left;
 }
 
-#editor {
-	width: 64%;
+.editor-outer {
+	width: 63.5%;
 	height: 100%;
 	border: 1px solid Grey;
     margin-right: 10px;
 	position: relative;
 	float: left;
+}
+
+#editor {
+    height:100%;
 }
 
 #feedback {
@@ -38,7 +42,7 @@ nav {
 .feedback-outer {
 	border: 1px solid Grey;
 	padding: 5px 3px 5px 8px;
-	width: 35%;
+	width: 35.4%;
 	height: 500px;
 	float: right;
 }

@@ -16,14 +16,17 @@
     <p class="lead">SQL query equivalence checking made simple.</p>
 </div>
 
-<div class="container" style="margin-bottom: 10px;">
+<div class="container" style="margin:auto;margin-bottom: 10px;width:70%;min-width:920px;">
     <div class="sample-btn-row">
         <button type="button" class="btn btn-secondary sample-btn sample1">Sample 1</button>
         <button type="button" class="btn btn-secondary sample-btn sample2">Sample 2</button>
         <button type="button" class="btn btn-secondary sample-btn sample3">Sample 3</button>
     </div>
     <div id="wrapper">
-        <div id="editor"></div>
+        <div class="editor-outer">
+            <div id="editor"></div>
+            <button type="button" style="margin-top:5px;float:right;margin-right:-1px;" class="btn btn-success submit-btn">Submit</button>
+        </div>
         <div class="well">
             <div class="feedback-outer">
                 <div class="well-header">Result</div>
@@ -32,7 +35,6 @@
         </div>
     </div>
 
-    <button type="button" style="margin-top:5px; margin-left:223px;" class="btn btn-success submit-btn">Submit</button>
 </div><!-- /.container -->
     
 <script>
