@@ -19,3 +19,8 @@ def index():
 def solve():
     query = request.form.get('query')
     return query
+
+@app.route('/register', methods = ['POST'])
+def register():
+    username = request.form.get('username')
+    password = request.form.get('password')
