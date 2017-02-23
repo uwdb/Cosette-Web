@@ -1,7 +1,7 @@
 # Main api routes for frontend
 
 import os
-
+#from data.db import db
 from flask import Flask, render_template, request
 template_dir = os.path.abspath('../frontend')
 static_dir = os.path.abspath('../frontend/static')
@@ -24,3 +24,7 @@ def solve():
 def register():
     username = request.form.get('username')
     password = request.form.get('password')
+    username_check = db.query('select count(*) from users where username=' + username)
+    if username_check > 0:
+        return 'Username taken.'
+    db.insert('users', username=username)
