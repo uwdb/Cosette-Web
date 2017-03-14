@@ -8,6 +8,8 @@ static_dir = os.path.abspath('../frontend/static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 app.debug = True
 
+import solver
+
 
 # Index page for GET
 @app.route('/')
@@ -18,7 +20,7 @@ def index():
 @app.route('/solve', methods = ['POST'])
 def solve():
     query = request.form.get('query')
-    return query
+    return solver.solve(query)
 
 @app.route('/register', methods = ['POST'])
 def register():

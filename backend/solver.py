@@ -1,5 +1,12 @@
+import subprocess
+import pipes
+import tempfile
 
 def solve(query):
-    process = subprocess.Popen('', stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    return "The solver doesn't do anything now."
+    with tempfile.NamedTemporaryFile() as temp:
+        temp.write(query);
+        temp.seek(0);
+        cmd = 'cd Cosette; ./solve.sh ' + temp.name
+        print cmd
+        output = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT, universal_newlines=False)
+        return output

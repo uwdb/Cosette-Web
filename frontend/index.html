@@ -18,9 +18,9 @@
 
 <div class="container" style="margin:auto;margin-bottom: 10px;width:70%;min-width:920px;">
     <div class="sample-btn-row">
-        <button type="button" class="btn btn-secondary sample-btn sample1">Sample 1</button>
-        <button type="button" class="btn btn-secondary sample-btn sample2">Sample 2</button>
-        <button type="button" class="btn btn-secondary sample-btn sample3">Sample 3</button>
+        <button type="button" class="btn btn-secondary sample-btn sample1">CQ Example</button>
+        <button type="button" class="btn btn-secondary sample-btn sample2">Push Select To Subquery</button>
+        <button type="button" class="btn btn-secondary sample-btn sample3">Disjunction To Union</button>
     </div>
     <div id="wrapper">
         <div class="editor-outer">
@@ -67,14 +67,17 @@
 
         $('.sample1').click(function() {
             editor.setValue(sample_1, -1);
+            $("#feedback").text("");
         });
 
         $('.sample2').click(function() {
             editor.setValue(sample_2, -1);
+            $("#feedback").text("");
         });
 
         $('.sample3').click(function() {
             editor.setValue(sample_3, -1);
+            $("#feedback").text("");
         });
     });    
 
