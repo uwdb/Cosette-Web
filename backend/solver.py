@@ -11,7 +11,7 @@ def solve(query):
         output_cmp = output.lower()
         if "error" in output_cmp:
             if "attempt to save an incomplete proof" in output_cmp:
-                return "Queries are not equivalent."
+                return "Query equivalence unknown."
             elif "syntax error" in output_cmp:
                 return "Syntax error in Cosette."
         else:
