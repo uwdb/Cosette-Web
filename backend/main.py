@@ -2,7 +2,7 @@
 
 import os
 #from data.db import db
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 template_dir = os.path.abspath('../frontend')
 static_dir = os.path.abspath('../frontend/static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
@@ -30,3 +30,8 @@ def register():
     if username_check > 0:
         return 'Username taken.'
     db.insert('users', username=username)
+
+@app.route('/compiled/<path:file>')
+def serve_compiled(file):
+    compiled_dir = os.path.abspath('Cosette/.compiled')
+    return send_from_directory(compiled_dir, file, mimetype='text/plain')

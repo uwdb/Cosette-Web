@@ -61,7 +61,7 @@
                 method: 'POST',
                 data: {"query" : query},
                 success: function(data) {
-                    $("#feedback").text(data);
+                    $("#feedback").html(data);
                 }
             });
         });
