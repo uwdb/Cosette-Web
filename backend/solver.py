@@ -27,7 +27,7 @@ def solve(query):
         return parse_results(results)
 
 def parse_results(results):
-    output_cmp = results[0].lower()
+    output_cmp = results[0]
     matches = re.search(regex, output_cmp)
     coq_filename = None
     if matches:
