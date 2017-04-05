@@ -28,15 +28,16 @@ def solve(query):
 
 def parse_results(results):
     output_cmp = results[0]
+    output_lower = output_cmp.lower()
     matches = re.search(regex, output_cmp)
     coq_filename = None
     if matches:
         coq_filename = matches.group()[:-1]
     ret = ''
-    if "error" in output_cmp:
+    if "error" in output_lower:
         if "attempt to save an incomplete proof" in output_cmp:
             ret = "Query equivalence unknown."
-        elif "syntax error" in output_cmp:
+        elif "syntax error" in output_lower:
             ret = "Syntax error in Cosette."
     else:
         ret = "Success. Queries are equivalent."
