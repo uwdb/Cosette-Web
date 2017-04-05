@@ -7,9 +7,7 @@ from logging.handlers import RotatingFileHandler
 
 template_dir = os.path.abspath('../frontend')
 static_dir = os.path.abspath('../frontend/static')
-app = Flask(__name__, template_folder=template_dir, static_folder=static_dir, debug=True)
-app.debug = True
-handler = RotatingFileHandler('Cosette/.compiled/flask.log', maxBytes=10000, backupCount=1)
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
 
 import solver
