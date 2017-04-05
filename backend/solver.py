@@ -41,7 +41,7 @@ def parse_results(results):
     else:
         ret = "Success. Queries are equivalent."
     output_filename = coq_filename[:-1] + "output"
-    write_output_file(results[0], 'Cosette/.compiled')
+    write_output_file(results[0], 'Cosette/.compiled' + output_filename)
     ret += '<br><a href="/compiled/{}" target="_blank">Coq File</a>'.format(coq_filename)
     ret += '<br><a href="/compiled/{}" target="_blank">Output File</a>'.format(output_filename)
     return ret
