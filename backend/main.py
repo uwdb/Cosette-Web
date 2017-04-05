@@ -1,12 +1,16 @@
 # Main api routes for frontend
 
 import os
-#from data.db import db
 from flask import Flask, render_template, request, send_from_directory
+import logging
+from logging.handlers import RotatingFileHandler
+
 template_dir = os.path.abspath('../frontend')
 static_dir = os.path.abspath('../frontend/static')
-app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir, debug=True)
 app.debug = True
+handler = RotatingFileHandler('Cosette/.compiled/flask.log', maxBytes=10000, backupCount=1)
+
 
 import solver
 
