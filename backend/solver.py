@@ -33,6 +33,8 @@ def parse_results(results):
     coq_filename = None
     if matches:
         coq_filename = matches.group()[:-1]
+    else:
+        return results[0]
     ret = ''
     if "error" in output_lower:
         if "attempt to save an incomplete proof" in output_lower:
