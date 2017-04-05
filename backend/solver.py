@@ -35,7 +35,7 @@ def parse_results(results):
         coq_filename = matches.group()[:-1]
     ret = ''
     if "error" in output_lower:
-        if "attempt to save an incomplete proof" in output_cmp:
+        if "attempt to save an incomplete proof" in output_lower:
             ret = "Query equivalence unknown."
         elif "syntax error" in output_lower:
             ret = "Syntax error in Cosette."
