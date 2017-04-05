@@ -12,15 +12,15 @@ def solve(query):
         temp.seek(0);
         cmd_coq = 'cd Cosette; ./solve.sh ' + temp.name
         cmd_ros = './rosette_FAKE.sh'
-        running_procs = [Popen(cmd_coq, shell=True, stdout=PIPE, stderr=PIPE),
-                         Popen(cmd_ros, shell=True, stdout=PIPE, stderr=PIPE)]
+        running_procs = [(Popen(cmd_coq, shell=True, stdout=PIPE, stderr=PIPE), 0),
+                         (Popen(cmd_ros, shell=True, stdout=PIPE, stderr=PIPE), 1)]
         results = ["", ""]
         while running_procs:
             for i, proc in enumerate(running_procs):
-                retcode = proc.poll()
+                retcode = proc[0].poll()
                 if retcode is not None:
                     running_procs.remove(proc)
-                    results[i] = proc.stdout.read() + proc.stderr.read()
+                    results[proc[1]] = proc[0].stdout.read() + proc[0].stderr.read()
                 else:
                     time.sleep(.1)
                     continue
@@ -34,7 +34,7 @@ def parse_results(results):
     if matches:
         coq_filename = matches.group()[:-1]
     else:
-        return results[0]
+        return results
     ret = ''
     if "error" in output_lower:
         if "attempt to save an incomplete proof" in output_lower:
