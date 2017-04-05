@@ -40,6 +40,12 @@ def parse_results(results):
             ret = "Syntax error in Cosette."
     else:
         ret = "Success. Queries are equivalent."
+    output_filename = coq_filename[:-1] + "output"
+    write_output_file(results[0], 'Cosette/.compiled')
     ret += '<br><a href="/compiled/{}" target="_blank">Coq File</a>'.format(coq_filename)
+    ret += '<br><a href="/compiled/{}" target="_blank">Output File</a>'.format(output_filename)
     return ret
-    #return "".join(results)
+
+def write_output_file(data, filename):
+    with open(filename, 'w') as file:
+        file.write(data)
