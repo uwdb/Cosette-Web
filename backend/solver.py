@@ -6,7 +6,7 @@ import re
 
 regex = r'[a-zA-z]+\.v\"'
 
-ros_regex = r'[a-zA-z]+\.rkt\"'
+ros_regex = r'[a-zA-z]+\.rkt'
 
 def solve(query):
     with tempfile.NamedTemporaryFile() as temp:
@@ -35,12 +35,11 @@ def parse_results(results):
     ros_matches = re.search(ros_regex, results[1])
     coq_filename = None
     ros_filename = None
+    print(results[1])
     if matches:
         coq_filename = matches.group()[:-1]
     if ros_matches:
-        ros_filename = matches.group()[:-1]
-    else:
-        return results
+        ros_filename = ros_matches.group()
     ret = ''
     if "error" in output_lower:
         if "attempt to save an incomplete proof" in output_lower:
@@ -51,10 +50,13 @@ def parse_results(results):
         ret = "Success. Queries are equivalent."
     output_filename = coq_filename[:-1] + "output"
     write_output_file(results[0], 'Cosette/.compiled/' + output_filename)
+
+    ros_results = results[1].replace(ros_filename, '')
+
     ret += '<br><a href="/compiled/{}" target="_blank">Coq File</a>'.format(coq_filename)
     ret += '<br><a href="/compiled/{}" target="_blank">Output File</a>'.format(output_filename)
     ret += '<br><a href="/compiled/{}" target="_blank">Rosette File</a>'.format(ros_filename)
-    ret += '<br>' + results[1]
+    ret += '<br>' + ros_results
     return ret
 
 def write_output_file(data, filename):
