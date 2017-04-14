@@ -1,4 +1,4 @@
-FROM shumo/hottsql
+FROM shumo/cosette-frontend
 
 RUN apt-get install -yqq python-pip
 

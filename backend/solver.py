@@ -11,12 +11,12 @@ def solve(query):
         temp.write(query);
         temp.seek(0);
         cmd_coq = 'cd Cosette; ./solve.sh ' + temp.name
-        cmd_ros = './rosette_FAKE.sh'
+        cmd_ros = 'cd Cosette; ./rosette_solve.sh' + temp.name
         running_procs = [(Popen(cmd_coq, shell=True, stdout=PIPE, stderr=PIPE), 0),
                          (Popen(cmd_ros, shell=True, stdout=PIPE, stderr=PIPE), 1)]
         results = ["", ""]
         while running_procs:
-            for i, proc in enumerate(running_procs):
+            for proc in running_procs:
                 retcode = proc[0].poll()
                 if retcode is not None:
                     running_procs.remove(proc)
@@ -31,8 +31,10 @@ def parse_results(results):
     output_lower = output_cmp.lower()
     matches = re.search(regex, output_cmp)
     coq_filename = None
+    ros_filename = None
     if matches:
         coq_filename = matches.group()[:-1]
+        ros_filename = coq_filename[:-1] + 'rkt'
     else:
         return results
     ret = ''
@@ -47,6 +49,8 @@ def parse_results(results):
     write_output_file(results[0], 'Cosette/.compiled/' + output_filename)
     ret += '<br><a href="/compiled/{}" target="_blank">Coq File</a>'.format(coq_filename)
     ret += '<br><a href="/compiled/{}" target="_blank">Output File</a>'.format(output_filename)
+    ret += '<br><a href="/compiled/{}" target="_blank">Rosette File</a>'.format(ros_filename)
+    ret += '<br>' + results[1]
     return ret
 
 def write_output_file(data, filename):
