@@ -6,6 +6,8 @@ import re
 
 regex = r'[a-zA-z]+\.v\"'
 
+ros_regex = r'[a-zA-z]+\.rkt\"'
+
 def solve(query):
     with tempfile.NamedTemporaryFile() as temp:
         temp.write(query);
@@ -30,11 +32,13 @@ def parse_results(results):
     output_cmp = results[0]
     output_lower = output_cmp.lower()
     matches = re.search(regex, output_cmp)
+    ros_matches = re.search(ros_regex, results[1])
     coq_filename = None
     ros_filename = None
     if matches:
         coq_filename = matches.group()[:-1]
-        ros_filename = coq_filename[:-1] + 'rkt'
+    if ros_matches:
+        ros_filename = matches.group()[:-1]
     else:
         return results
     ret = ''
