@@ -11,7 +11,7 @@ def solve(query):
         temp.write(query);
         temp.seek(0);
         cmd_coq = 'cd Cosette; ./solve.sh ' + temp.name
-        cmd_ros = 'cd Cosette; ./rosette_solve.sh' + temp.name
+        cmd_ros = 'cd Cosette; ./rosette_solve.sh ' + temp.name
         running_procs = [(Popen(cmd_coq, shell=True, stdout=PIPE, stderr=PIPE), 0),
                          (Popen(cmd_ros, shell=True, stdout=PIPE, stderr=PIPE), 1)]
         results = ["", ""]
