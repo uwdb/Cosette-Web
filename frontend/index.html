@@ -7,6 +7,21 @@
 <script src="./static/lib/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <link href="./static/lib/bootstrap-4.0.0-alpha.5-dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="./static/css/main.css">
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    table {
+        margin-bottom: 15px;
+    }
+
+    th, td {
+        padding: 5px;
+    }
+</style>
+
 </head>
 
 <body>
@@ -51,6 +66,7 @@
     editor.setOptions({
       fontSize: "11pt"
     });
+    editor.getSession().setUseWrapMode(true);
     
     $(function() {
         $('.submit-btn').click(function() {
@@ -61,7 +77,30 @@
                 method: 'POST',
                 data: {"query" : query},
                 success: function(data) {
-                    $("#feedback").html(data);
+                    var json = $.parseJSON(data);
+                    var html = json['coq_html'] + json['rosette']['html'];
+                    var ros = json['rosette']['json'];
+                    if ('counter-example' in ros) {
+                        html += '<br><br><p style="font-weight: bold;">Counter Example:</p>';
+                        for (var i = 0; i < ros['counter-example'].length; i++) {
+                            var table_html = '<table><tr>';
+                            var table = ros['counter-example'][i];
+                            for (var j = 0; j < table['table-content'][0].length; j++) {
+                                table_html += '<th>' + table['table-content'][0][j] + '</th>';
+                            }
+                            table_html += '<th>Multiplicity</th></tr><tr>';
+                            for (var j = 0; j < table['table-content'][0].length; j++) {
+                                table_html += '<td>' + table['table-content'][1][0][0][j] + '</td>';
+                            }
+                            table_html += '<td>' + table['table-content'][1][0][1] + '</td></tr>';
+
+                            table_html += '</table>';
+                            html += table_html;
+                        }
+                        
+                    }
+                    console.log(json);
+                    $("#feedback").html(html);
                 }
             });
         });

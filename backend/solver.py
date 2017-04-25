@@ -3,6 +3,7 @@ import pipes
 import tempfile
 import time
 import re
+import json
 
 regex = r'[a-zA-z]+\.v\"'
 
@@ -35,29 +36,37 @@ def parse_results(results):
     ros_matches = re.search(ros_regex, results[1])
     coq_filename = None
     ros_filename = None
-    print(results[1])
     if matches:
         coq_filename = matches.group()[:-1]
     if ros_matches:
         ros_filename = ros_matches.group()
-    ret = ''
+    coq_ret = ''
+    ros_ret = ''
     if "error" in output_lower:
         if "attempt to save an incomplete proof" in output_lower:
-            ret = "Query equivalence unknown."
+            coq_ret = "Query equivalence unknown."
         elif "syntax error" in output_lower:
-            ret = "Syntax error in Cosette."
+            coq_ret = "Syntax error in Cosette."
     else:
-        ret = "Success. Queries are equivalent."
+       coq_ret = "Success. Queries are equivalent."
     output_filename = coq_filename[:-1] + "output"
     write_output_file(results[0], 'Cosette/.compiled/' + output_filename)
 
     ros_results = results[1].replace(ros_filename, '')
 
-    ret += '<br><a href="/compiled/{}" target="_blank">Coq File</a>'.format(coq_filename)
-    ret += '<br><a href="/compiled/{}" target="_blank">Output File</a>'.format(output_filename)
-    ret += '<br><a href="/compiled/{}" target="_blank">Rosette File</a>'.format(ros_filename)
-    ret += '<br>' + ros_results
-    return ret
+    coq_ret += '<br><a href="/compiled/{}" target="_blank">Coq File</a>'.format(coq_filename)
+    
+    ros_ret += '<br><a href="/compiled/{}" target="_blank">Rosette File</a>'.format(ros_filename)
+    print(ros_results)
+    json_dict = {
+            'coq_html': coq_ret,
+            'rosette': {
+                'html': ros_ret,
+                'json': json.loads(ros_results)
+                }
+            }
+    
+    return json.dumps(json_dict)
 
 def write_output_file(data, filename):
     with open(filename, 'w') as file:

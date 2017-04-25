@@ -1,18 +1,18 @@
+# Docker for prod site
 FROM shumo/cosette-frontend
 
 RUN apt-get install -yqq python-pip
 
-#RUN curl -O https://mirror.racket-lang.org/installers/6.8/racket-6.8-x86_64-linux.sh
-#RUN chmod +x racket-6.8-x86_64-linux.sh
-#RUN printf '\n\n/usr/local\n' | ./racket-6.8-x86_64-linux.sh
+RUN git clone --recursive https://github.com/uwdb/Cosette-Web.git
 
-#RUN raco pkg install rosette; exit 0
+RUN pip install -r /Cosette-Web/requirements.txt
 
-COPY requirements.txt /src/
-RUN pip install -r /src/requirements.txt
+RUN cd /Cosette/dsl; git pull; cabal build
 
-COPY . /src/
-WORKDIR /src/
+#RUN cd /Cosette-Web/backend/Cosette/dsl; cabal update; cabal sandbox init; cabal install Parsec; cabal install HUnit; cabal build
+
+WORKDIR /Cosette-Web
+
 EXPOSE 5000
 ENV FLASK_APP main.py
 CMD ["./run_server.sh"]
