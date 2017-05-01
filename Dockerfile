@@ -3,11 +3,15 @@ FROM shumo/cosette-frontend
 
 RUN apt-get install -yqq python-pip
 
-RUN git clone --recursive https://github.com/uwdb/Cosette-Web.git
+RUN git clone https://github.com/uwdb/Cosette-Web.git
 
 RUN pip install -r /Cosette-Web/requirements.txt
 
-RUN cd /Cosette/dsl; git pull; cabal build
+RUN cd /Cosette-Web/backend; git clone https://github.com/uwdb/Cosette.git
+
+RUN cp -R /Cosette /Cosette-Web/backend/Cosette
+
+RUN cd /Cosette-Web/backend/Cosette/dsl; git pull; cabal build
 
 #RUN cd /Cosette-Web/backend/Cosette/dsl; cabal update; cabal sandbox init; cabal install Parsec; cabal install HUnit; cabal build
 

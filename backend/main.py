@@ -1,4 +1,4 @@
-# Main api routes for frontend
+""" Main api routes for frontend """
 
 import os
 from flask import Flask, render_template, request, send_from_directory
@@ -10,7 +10,7 @@ static_dir = os.path.abspath('../frontend/static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
 
-import solver
+import Cosette.solver as solver
 
 
 # Index page for GET
@@ -22,7 +22,7 @@ def index():
 @app.route('/solve', methods = ['POST'])
 def solve():
     query = request.form.get('query')
-    return solver.solve(query)
+    return solver.solve(query, "./Cosette")
 
 @app.route('/register', methods = ['POST'])
 def register():
