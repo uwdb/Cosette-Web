@@ -77,14 +77,19 @@
                 method: 'POST',
                 data: {"query" : query},
                 success: function(data) {
-                    var json = $.parseJSON(data);
-                    var html = json['coq_html'] + json['rosette']['html'];
-                    var ros = json['rosette']['json'];
-                    if ('counter-example' in ros) {
-                        html += '<br><br><p style="font-weight: bold;">Counter Example:</p>';
-                        for (var i = 0; i < ros['counter-example'].length; i++) {
-                            var table_html = '<table><tr>';
-                            var table = ros['counter-example'][i];
+                    var result = $.parseJSON(data);
+                    var html = "";
+                    var answer = result["result"]
+                    console.log(result); 
+                    if (answer ===  "NEQ") {
+                        var ros = result["counterexamples"];
+                        html += "Two queries are not equivalent."
+                        html += '<br><br><p style="font-weight: bold;">Counter Examples:</p>';
+                        for (var i = 0; i < ros.length; i++) {
+                            var table = ros[i];
+                            var table_html = '<p>';
+                            table_html += 'Table <em> ' + table["table-name"] + '</em> <br>'; 
+                            table_html += '<table><tr>';
                             for (var j = 0; j < table['table-content'][0].length; j++) {
                                 table_html += '<th>' + table['table-content'][0][j] + '</th>';
                             }
@@ -94,13 +99,17 @@
                             }
                             table_html += '<td>' + table['table-content'][1][0][1] + '</td></tr>';
 
-                            table_html += '</table>';
+                            table_html += '</table> </p>';
                             html += table_html;
                         }
-                        
+                        $("#feedback").html(html);    
+                    } else if (answer === "EQ"){
+                        $("#feedback").text("Two queries are equivalent.");
+                    } else if (answer === "UNKNOWN"){
+                        $("#feedback").text("Two queries' equivalence is unknown. Solver runs out of time.");
+                    } else { //error
+                        $("#feedback").text(result["error_msg"]);
                     }
-                    console.log(json);
-                    $("#feedback").html(html);
                 }
             });
         });

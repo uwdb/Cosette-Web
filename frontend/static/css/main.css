@@ -37,6 +37,7 @@ nav {
 #feedback {
 	position: relative;
 	text-align: left;
+	white-space: pre-line;
 }
 
 .feedback-outer {
