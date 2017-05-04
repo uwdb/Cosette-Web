@@ -45,11 +45,7 @@ def solve():
         conn.close()
         return res
     else:
-        conn = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
-        cur = conn.cursor()
-        cur.execute('SELECT count(*) FROM queries')
-        res = cur.fetchone()
-        return res[0]
+        return 'username: ' + username + ' ... password: ' + password + ' ... ' + database
         abort(403)
 
 @app.route('/register', methods = ['POST'])
