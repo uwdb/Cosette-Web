@@ -12,6 +12,15 @@ app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
 import Cosette.solver as solver
 
+import psycopg2
+
+import time
+
+hostname = 'dbserver02.cs.washington.edu'
+username = 'cosette'
+password = 'C0sette'
+database = 'cosdb'
+
 
 # Index page for GET
 @app.route('/')
@@ -24,7 +33,14 @@ def solve():
     if 'username' in requeset.cookies:
         username = request.cookies['username']
         query = request.form.get('query')
-        return solver.solve(query, "./Cosette")
+        print 'attempting solve'
+        res = solver.solve(query, "./Cosette")
+        print 'solving done'
+        conn = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+        cur = conn.cursor()
+        cur.execute('INSERT INTO queries (username, timestamp, cosette_code, result_json) VALUES (%s, %s, %s, %s, %s, %s)', (username, time.time() * 1000, query, json.dumps(res)))
+        conn.close()
+        return res
     else:
         abort(403)
 
@@ -32,10 +48,6 @@ def solve():
 def register():
     username = request.form.get('username')
     password = request.form.get('password')
-    username_check = db.query('select count(*) from users where username=' + username)
-    if username_check > 0:
-        return 'Username taken.'
-    db.insert('users', username=username)
 
 @app.route('/compiled/<path:file>')
 def serve_compiled(file):
