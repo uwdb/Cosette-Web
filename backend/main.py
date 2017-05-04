@@ -32,12 +32,13 @@ def solve():
     if 'username' in request.cookies:
         username = request.cookies['username']
         query = request.form.get('query')
-        email = request.cookies['email']
-        institution = request.cookies['institution']
-        print 'attempting solve'
+        email = ''
+        if 'email' in request.cookies:
+            email = request.cookies['email']
+        institution = ''
+        if 'institution' in request.cookies:
+            institution = request.cookies['institution']
         res = solver.solve(query, "./Cosette")
-        return res
-        print 'solving done'
         conn = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
         cur = conn.cursor()
         cur.execute('INSERT INTO queries (username, institution, email, timestamp, cosette_code, result_json) VALUES (%s, %s, %s, %s, %s, %s)', (username, institution, email, time.time() * 1000, query, json.dumps(res)))
@@ -48,7 +49,7 @@ def solve():
         cur = conn.cursor()
         cur.execute('SELECT count(*) FROM queries')
         res = cur.fetchone()
-        return result[0]
+        return res[0]
         abort(403)
 
 @app.route('/register', methods = ['POST'])
