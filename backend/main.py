@@ -30,15 +30,16 @@ def index():
 # Solve api call
 @app.route('/solve', methods = ['POST'])
 def solve():
-    if 'username' in requeset.cookies:
+    if 'username' in request.cookies:
         username = request.cookies['username']
         query = request.form.get('query')
         print 'attempting solve'
         res = solver.solve(query, "./Cosette")
+        return res
         print 'solving done'
         conn = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
         cur = conn.cursor()
-        cur.execute('INSERT INTO queries (username, timestamp, cosette_code, result_json) VALUES (%s, %s, %s, %s, %s, %s)', (username, time.time() * 1000, query, json.dumps(res)))
+        cur.execute('INSERT INTO queries (username, timestamp, cosette_code, result_json) VALUES (%s, %s, %s, %s)', (username, time.time() * 1000, query, json.dumps(res)))
         conn.close()
         return res
     else:
