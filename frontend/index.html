@@ -5,8 +5,15 @@
 <title>Cosette</title>
 <script src="./static/scripts/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
 <script src="./static/lib/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<link href="./static/lib/bootstrap-4.0.0-alpha.5-dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="./static/css/main.css">
+
+<script src="./static/lib/js.cookie.js" style="text/javascript" charset="utf-8"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
 
 <style>
     table, th, td {
@@ -50,7 +57,30 @@
         </div>
     </div>
 
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Please set your username.</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          	<div class="form-group" style="text-align: left;">
+    			<label for="username-input" style="font-weight: bold;">Username</label>
+    			<input type="text" class="form-control" id="username-input" aria-describedby="emailHelp" placeholder="Enter username">
+    			<small id="emailHelp" class="form-text text-muted">Please try to use the same username that you've used before.</small>
+  			</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div><!-- /.container -->
+
     
 <script>
 
@@ -69,6 +99,20 @@
     editor.getSession().setUseWrapMode(true);
     
     $(function() {
+        
+        if (!Cookies.get('username')) {
+            $('#myModal').modal('show');
+        }
+        
+        $('#myModal').on('hidden.bs.modal', function(e) {
+            if ($('#username-input').val() == "") {
+                $('#myModal').modal('show');
+            } else {
+                Cookies.set('username', $('#username-input').val());
+                console.log(Cookies.get('username'));
+            }
+        });
+	    
         $('.submit-btn').click(function() {
             var query = editor.getValue();
             $("#feedback").text("");

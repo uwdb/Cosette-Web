@@ -1,7 +1,7 @@
 """ Main api routes for frontend """
 
 import os
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, abort
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -21,8 +21,12 @@ def index():
 # Solve api call
 @app.route('/solve', methods = ['POST'])
 def solve():
-    query = request.form.get('query')
-    return solver.solve(query, "./Cosette")
+    if 'username' in requeset.cookies:
+        username = request.cookies['username']
+        query = request.form.get('query')
+        return solver.solve(query, "./Cosette")
+    else:
+        abort(403)
 
 @app.route('/register', methods = ['POST'])
 def register():
