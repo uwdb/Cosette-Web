@@ -16,11 +16,6 @@ import psycopg2
 
 import time
 
-hostname = 'dbserver02.cs.washington.edu'
-username = 'cosette'
-password = 'C0sette'
-database = 'cosdb'
-
 
 # Index page for GET
 @app.route('/')
@@ -30,6 +25,10 @@ def index():
 # Solve api call
 @app.route('/solve', methods = ['POST'])
 def solve():
+    hostname = 'dbserver02.cs.washington.edu'
+    username = 'cosette'
+    password = 'C0sette'
+    database = 'cosdb'
     if 'username' in request.cookies:
         username = request.cookies['username']
         query = request.form.get('query')
