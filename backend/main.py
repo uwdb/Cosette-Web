@@ -39,6 +39,7 @@ def solve():
         if 'institution' in request.cookies:
             institution = request.cookies['institution']
         res = solver.solve(query, "./Cosette")
+        return res
         conn = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
         cur = conn.cursor()
         cur.execute('INSERT INTO queries (username, institution, email, timestamp, cosette_code, result_json) VALUES (%s, %s, %s, %s, %s, %s)', (username, institution, email, time.time() * 1000, query, json.dumps(res)))
