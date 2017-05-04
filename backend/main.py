@@ -32,8 +32,8 @@ def solve():
     if 'username' in request.cookies:
         username = request.cookies['username']
         query = request.form.get('query')
-        email = 'default'
-        institution = 'default inst'
+        email = request.cookies['email']
+        institution = request.cookies['institution']
         print 'attempting solve'
         res = solver.solve(query, "./Cosette")
         return res

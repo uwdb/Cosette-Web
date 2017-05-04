@@ -61,7 +61,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Please set your username.</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Please set your information. (Just this once)</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -71,6 +71,10 @@
     			<label for="username-input" style="font-weight: bold;">Username</label>
     			<input type="text" class="form-control" id="username-input" aria-describedby="emailHelp" placeholder="Enter username">
     			<small id="emailHelp" class="form-text text-muted">Please try to use the same username that you've used before.</small>
+    			<label for="institution-input" style="font-weight: bold;margin-top:10px;">Institution</label>
+    			<input type="text" class="form-control" id="institution-input" aria-describedby="emailHelp" placeholder="Enter institution">
+    			<label for="email-input" style="font-weight: bold;margin-top:10px;">Email (optional)</label>
+    			<input type="text" class="form-control" id="email-input" aria-describedby="emailHelp" placeholder="Enter email (optional)">
   			</div>
           </div>
           <div class="modal-footer">
@@ -105,11 +109,14 @@
         }
         
         $('#myModal').on('hidden.bs.modal', function(e) {
-            if ($('#username-input').val() == "") {
+            if ($('#username-input').val() == "" || $('#institution-input').val()) {
                 $('#myModal').modal('show');
             } else {
                 Cookies.set('username', $('#username-input').val());
-                console.log(Cookies.get('username'));
+                Cookies.set('institution', $('#institution-input').val());
+                if ($('#email-input').val() != "") {
+                    Cookies.set('email', $('#email-input').val());
+                }
             }
         });
 	    
