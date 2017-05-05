@@ -27,6 +27,11 @@ def log_query(query):
     db_password = os.environ['COS_DB_PASSWORD']
     db_name = os.environ['COS_DB_DATABASE']
 
+    # counterexample should converted to string if it is a list
+    counterexamples = get_or_default("counterexamples")
+    if isinstance(counterexamples, list):
+        counterexamples = json.dumps(counterexamples)
+
     conn = psycopg2.connect(host=db_hostname, user=db_username,
                             password=db_password, dbname=db_name)
     db_columns = ["username", "email", "timestamp", "cosette_code", "result",
@@ -47,7 +52,7 @@ def log_query(query):
                  get_or_default("coq_log"),
                  get_or_default("rosette_log"),
                  get_or_default("error_msg"),
-                 get_or_default("counterexamples"),
+                 counterexamples,
                  get_or_default("coq_source"),
                  get_or_default("rosette_source")))
     conn.commit()
