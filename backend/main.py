@@ -78,7 +78,10 @@ def solve():
         res["username"] = username
         res["email"] = email
         res["instituion"] = institution
-        log_query(res)
+        try:
+            log_query(res)
+        except Exception as e:
+            res["error_msg"] = e.message
         return json.dumps(res)
     else:
         abort(403)
