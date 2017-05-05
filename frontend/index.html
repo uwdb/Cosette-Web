@@ -42,7 +42,7 @@
     <div class="sample-btn-row">
         <button type="button" class="btn btn-secondary sample-btn sample1">Conjunctive Query</button>
         <button type="button" class="btn btn-secondary sample-btn sample2">Conjunctive Select</button>
-        <!--- <button type="button" class="btn btn-secondary sample-btn sample3">Disjunction To Union</button> -->
+        <button type="button" class="btn btn-secondary sample-btn sample3">Common Exp. Elim.</button>
     </div>
     <div id="wrapper">
         <div class="editor-outer">
@@ -52,6 +52,10 @@
         <div class="well">
             <div class="feedback-outer">
                 <div class="well-header">Result</div>
+                <div id="solving" style="display:none;">
+                Solving ...
+                <img src="./static/img/solving.gif" alt="solving" />
+                </div>
                 <div id="feedback"></div>
             </div>
         </div>
@@ -90,7 +94,7 @@
 
     var sample_1 = "schema s1(x:ty0, ya:ty1, ??);\nschema s2(yb:ty1, ??);\n\ntable a(s1);\ntable b(s2);\n\nquery q1\n`select distinct x.x as ax from a x, b y where x.ya = y.yb`;\n\nquery q2\n`select distinct x.x as ax from a x, a y, b z where x.x = y.x and x.ya = z.yb`;\n\nverify q1 q2;";
     var sample_2 = "schema s(??);\n\ntable r(s);\n\npredicate b1(s);\n\npredicate b2(s);\n\nquery q1\n`select * from r x where b1(x) and b2(x)`;\n\nquery q2\n`select * from (select * from r x where b1(x)) y where b2(y)`;\n\nverify q1 q2;"
-    var sample_3 = "schema s(??);\n\ntable a(s);\n\npredicate b0(s);\npredicate b1(s);\n\nquery q1\n`select distinct * from a x where b0(x) OR b1(x)`;\n\nquery q2\n`select distinct * from ((select * from a x where b0(x)) UNION ALL (select * from a y where b1(y))) z`;\n\nverify q1 q2;"
+    var sample_3 = "schema s1(x:int, y:int, ??);\n\ntable a(s1);\n\nquery q1\n`select (x.x + x.x) as ax\n from a x where x.x = x.y`;\n\nquery q2\n`select (x.x + x.y) as ax\n from a x where x.x = x.y`;\n\nverify q1 q2;"
 
     // editor setting
     $("#editor").text(sample_1);
@@ -164,6 +168,11 @@
                 }
             });
         });
+
+        var $solving = $('#solving').hide();
+        $(document)
+            .ajaxStart(function () {$solving.show();})
+            .ajaxStop(function () {$solving.hide();});
 
         $('.sample1').click(function() {
             editor.setValue(sample_1, -1);
