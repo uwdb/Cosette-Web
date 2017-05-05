@@ -13,6 +13,48 @@ template_dir = os.path.abspath('../frontend')
 static_dir = os.path.abspath('../frontend/static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
+def log_query(query):
+    """ log query in database """
+    assert isinstance(query, dict)
+
+    def get_or_default(field, default="None"):
+        """ helper function return field value or default """
+        return query[field] if field in query else default
+
+    # write to database
+    db_hostname = 'grabthar.cs.washington.edu'
+    db_username = os.environ['COS_DB_USERNAME']
+    db_password = os.environ['COS_DB_PASSWORD']
+    db_name = os.environ['COS_DB_DATABASE']
+
+    conn = psycopg2.connect(host=db_hostname, user=db_username,
+                            password=db_password, dbname=db_name)
+    db_columns = ["username", "email", "timestamp", "cosette_code", "result",
+                  "institution", "coq_result", "rosette_result", "coq_log",
+                  "rosette_log", "error_msg", "counterexamples", "coq_source",
+                  "rosette_source"]
+    cur = conn.cursor()
+    cur.execute('INSERT INTO queries ({}) VALUES ({})'.format(
+        ", ".join(db_columns), ", ".join(["%s"]*len(db_columns))),
+                (get_or_default("username"),
+                 get_or_default("email"),
+                 time.time() * 1000,
+                 get_or_default("cosette_code"),
+                 get_or_default("result"),
+                 get_or_default("instituion"),
+                 get_or_default("coq_result"),
+                 get_or_default("rosette_result"),
+                 get_or_default("coq_log"),
+                 get_or_default("rosette_log"),
+                 get_or_default("error_msg"),
+                 get_or_default("counterexamples"),
+                 get_or_default("coq_source"),
+                 get_or_default("rosette_source")))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 # Index page for GET
 @app.route('/')
 def index():
@@ -21,36 +63,24 @@ def index():
 # Solve api call
 @app.route('/solve', methods = ['POST'])
 def solve():
-    db_hostname = 'grabthar.cs.washington.edu'
-    db_username = os.environ['COS_DB_USERNAME']
-    db_password = os.environ['COS_DB_PASSWORD']
-    db_name = os.environ['COS_DB_DATABASE']
+    # there should be a username in the cookies
     if 'username' in request.cookies:
         username = request.cookies['username']
-        query = request.form.get('query')
+        cos_query = request.form.get('query')
         email = 'None'
         if 'email' in request.cookies:
             email = request.cookies['email']
         institution = 'None'
         if 'institution' in request.cookies:
             institution = request.cookies['institution']
-        res = solver.solve(query, "./Cosette")
-        conn = psycopg2.connect(host=db_hostname, user=db_username,
-                                password=db_password, dbname=db_name)
-        cur = conn.cursor()
-        cur.execute('INSERT INTO queries (username, institution, email, timestamp, cosette_code, result) VALUES (%s, %s, %s, %s, %s, %s)',
-                    (username,
-                     institution,
-                     email,
-                     time.time() * 1000,
-                     query,
-                     json.dumps(res)))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return res
+        res_string = solver.solve(cos_query, "./Cosette", True)
+        res = json.loads(res_string)
+        res["username"] = username
+        res["email"] = email
+        res["instituion"] = institution
+        log_query(res)
+        return json.dumps(res)
     else:
-        # return 'username: ' + username + ' ... password: ' + password + ' ... ' + database
         abort(403)
 
 @app.route('/register', methods = ['POST'])
