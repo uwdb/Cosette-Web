@@ -109,7 +109,7 @@
         }
         
         $('#myModal').on('hidden.bs.modal', function(e) {
-            if ($('#username-input').val() == "" || $('#institution-input').val()) {
+            if ( $('#username-input').val() == "" || $('#institution-input').val() == "") {
                 $('#myModal').modal('show');
             } else {
                 Cookies.set('username', $('#username-input').val());
