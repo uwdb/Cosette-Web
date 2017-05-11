@@ -43,11 +43,16 @@
 </div>
 
 <div class="container" style="margin:auto;margin-bottom: 10px;width:70%;min-width:920px;">
-    <div class="sample-btn-row">
-        <button type="button" class="btn btn-secondary sample-btn sample1">Conjunctive Query</button>
-        <button type="button" class="btn btn-secondary sample-btn sample2">Conjunctive Select</button>
-        <button type="button" class="btn btn-secondary sample-btn sample3">Common Exp. Elim.</button>
-    </div>
+	<div class="dropdown" style="text-align: left;margin-bottom:5px;">
+	  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		Example Queries
+	  </button>
+	  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+		<a class="dropdown-item sample-btn sample1" href="#">Conjunctive Query</a>
+		<a class="dropdown-item sample-btn sample2" href="#">Conjuctive Select</a>
+		<a class="dropdown-item sample-btn sample3" href="#">Common Exp. Elim.</a>
+	  </div>
+	</div>
     <div id="wrapper">
         <div class="editor-outer">
             <div id="editor"></div>
