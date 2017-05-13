@@ -50,7 +50,8 @@ function process_header_name(hn){
 function gen_counterexamples_html(counterexamples){
     var html = "";
     html += "Two queries are not equivalent."
-    html += '<br><br><p style="font-weight: bold;">Counter Examples:</p>';
+    html += '<br><br><p><span style="font-weight: bold;">Counter Examples: </span>';
+    html += '(i.e., input tables that, when fed into your input queries, will return different results)</p>';
     for (var i = 0; i < counterexamples.length; i++) {
         var table = counterexamples[i];
         var table_html = '<p>';
@@ -77,15 +78,14 @@ function gen_counterexamples_html(counterexamples){
         table_html += '</table> </p>';
         html += table_html;
     }
-    html += "<p> Counter examples are input tables that can show those two queries are not equivalent. </p>";
     return html;
 }
 
 $(function () {
 
-    //if (!Cookies.get('username')) {
-    //    $('#myModal').modal('show');
-    //}
+    if (!Cookies.get('username')) {
+        $('#myModal').modal('show');
+    }
 
     $('#myModal').on('hidden.bs.modal', function (e) {
         if ($('#username-input').val() == "" || $('#institution-input').val() == "") {
@@ -124,6 +124,8 @@ $(function () {
             }
         });
     });
+
+    $("#feedback").html(gen_counterexamples_html([]))
 
     var $solving = $('#solving').hide();
     $(document)
