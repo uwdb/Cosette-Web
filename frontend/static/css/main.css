@@ -38,6 +38,7 @@ nav {
 	position: relative;
 	text-align: left;
 	white-space: pre-line;
+	overflow: scroll;
 }
 
 .feedback-outer {
