@@ -125,8 +125,6 @@ $(function () {
         });
     });
 
-    $("#feedback").html(gen_counterexamples_html([]))
-
     var $solving = $('#solving').hide();
     $(document)
         .ajaxStart(function () { $solving.show(); })
