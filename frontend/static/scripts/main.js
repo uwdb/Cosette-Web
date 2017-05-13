@@ -68,9 +68,7 @@ function gen_counterexamples_html(counterexamples){
         var content = table['table-content'][1];
         for (var j = 0; j < content.length; j++) {
             var row = content[j][0];
-            console.log(row);
             var multiplicity = content[j][1];
-            console.log(multiplicity);
             for(var k =0; k < multiplicity; k++){
                 table_html += gen_row_html(row);
             }
