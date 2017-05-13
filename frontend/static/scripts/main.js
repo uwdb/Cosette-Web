@@ -18,11 +18,64 @@ editor.setOptions({
 });
 editor.getSession().setUseWrapMode(true);
 
+// generate a row of a table: row is an array
+function gen_row_html(row){
+    var makecell = (x) => '<td>' + x + '</td>';
+    var concat = (x, y) => x + y;
+    return row.map(makecell).reduce(concat, '') + '</tr>';
+}
+
+// processing header names
+function process_header_name(hn){
+    if(hn === "unknowns"){
+        return "??";
+    } else {
+        return hn;
+    }
+}
+
+// it takes a json object: counterexamples
+function gen_counterexamples_html(counterexamples){
+    var html = "";
+    html += "Two queries are not equivalent."
+    html += '<br><br><p style="font-weight: bold;">Counter Examples:</p>';
+    for (var i = 0; i < counterexamples.length; i++) {
+        var table = counterexamples[i];
+        var table_html = '<p>';
+        table_html += 'Table <em> ' + table["table-name"] + '</em> <br>';
+        table_html += '<table><tr>';
+
+        // generate headers
+        var header = table['table-content'][0];
+        for (var j = 0; j < header.length; j++) {
+            table_html += '<th>' + process_header_name(header[j]) + '</th>';
+        }
+        table_html += '</tr><tr>';
+
+        // we don't generate multiplicity column here, instead generate concrete rows
+        var content = table['table-content'][1];
+        for (var j = 0; j < content.length; j++) {
+            var row = content[j][0];
+            console.log(row);
+            var multiplicity = content[j][1];
+            console.log(multiplicity);
+            for(var k =0; k < multiplicity; k++){
+                table_html += gen_row_html(row);
+            }
+        }
+
+        table_html += '</table> </p>';
+        html += table_html;
+    }
+    html += "<p> Counter examples are input tables that can show those two queries are not equivalent. </p>";
+    return html;
+}
+
 $(function () {
 
-    if (!Cookies.get('username')) {
-        $('#myModal').modal('show');
-    }
+    //if (!Cookies.get('username')) {
+    //    $('#myModal').modal('show');
+    //}
 
     $('#myModal').on('hidden.bs.modal', function (e) {
         if ($('#username-input').val() == "" || $('#institution-input').val() == "") {
@@ -50,26 +103,7 @@ $(function () {
                 console.log(result);
                 if (answer === "NEQ") {
                     var ros = result["counterexamples"];
-                    html += "Two queries are not equivalent."
-                    html += '<br><br><p style="font-weight: bold;">Counter Examples:</p>';
-                    for (var i = 0; i < ros.length; i++) {
-                        var table = ros[i];
-                        var table_html = '<p>';
-                        table_html += 'Table <em> ' + table["table-name"] + '</em> <br>';
-                        table_html += '<table><tr>';
-                        for (var j = 0; j < table['table-content'][0].length; j++) {
-                            table_html += '<th>' + table['table-content'][0][j] + '</th>';
-                        }
-                        table_html += '<th>Multiplicity</th></tr><tr>';
-                        for (var j = 0; j < table['table-content'][0].length; j++) {
-                            table_html += '<td>' + table['table-content'][1][0][0][j] + '</td>';
-                        }
-                        table_html += '<td>' + table['table-content'][1][0][1] + '</td></tr>';
-
-                        table_html += '</table> </p>';
-                        html += table_html;
-                    }
-                    $("#feedback").html(html);
+                    $("#feedback").html(gen_counterexamples_html(ros));
                 } else if (answer === "EQ") {
                     $("#feedback").text("Two queries are equivalent.");
                 } else if (answer === "UNKNOWN") {
