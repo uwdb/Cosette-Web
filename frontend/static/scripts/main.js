@@ -18,9 +18,21 @@ editor.setOptions({
 });
 editor.getSession().setUseWrapMode(true);
 
+var the_number = 42;
+
+// process each cell of the content of a table
+function process_cell(cell){
+    if(typeof cell === "string" || cell instanceof String){
+        if(cell.startsWith("sv")){
+            return the_number;
+        }
+    }
+    return cell;
+}
+
 // generate a row of a table: row is an array
 function gen_row_html(row){
-    var makecell = (x) => '<td>' + x + '</td>';
+    var makecell = (x) => '<td>' + process_cell(x) + '</td>';
     var concat = (x, y) => x + y;
     return row.map(makecell).reduce(concat, '') + '</tr>';
 }
