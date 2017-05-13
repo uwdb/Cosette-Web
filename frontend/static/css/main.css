@@ -39,6 +39,7 @@ nav {
 	text-align: left;
 	white-space: pre-line;
 	overflow: scroll;
+	height: 460px;
 }
 
 .feedback-outer {
