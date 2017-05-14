@@ -77,6 +77,7 @@ function gen_counterexamples_html(counterexamples){
 
         table_html += '</table> </p>';
         html += table_html;
+        html += '<p> ?? is a synthetic attribute that represents any number of attributes. </p>';
     }
     return html;
 }
