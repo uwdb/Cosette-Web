@@ -122,6 +122,8 @@ $(function () {
                 } else { //error
                     $("#feedback").text(result["error_msg"]);
                 }
+
+                $("#yes-audio").play();
             }
         });
     });
