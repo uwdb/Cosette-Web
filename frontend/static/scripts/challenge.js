@@ -93,6 +93,7 @@ function gen_counterexamples_html(counterexamples){
 $(function () {
     
     var timeout_value = 7000; // 7 sec
+    var initial_timeout = 10000; // 10 sec
 
     // TODO: generate a random permutation
     var queries = [[simple_1, false, simple_1_r], [join_elim_wrong, false, join_elim_wrong_r], 
@@ -120,7 +121,7 @@ $(function () {
             challenger_name = $('#challenger-name-input').val();
             editor.setValue(queries[current_problem][0], -1);
             $("#feedback").text("");
-            setTimeout(user_timeout.bind(null, current_problem), timeout_value);
+            setTimeout(user_timeout.bind(null, current_problem), initial_timeout);
         }
     });
 
