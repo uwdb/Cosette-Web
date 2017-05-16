@@ -33,7 +33,7 @@
 
 <body>
 
-<audio id="yes-audio" src="./static/sound/yes.mp3"></audio>
+<audio id="yes-audio" src="./static/sound/yes.m4a"></audio>
 <audio id="no-audio" src="./static/sound/no.mp3"></audio>
 <audio id="timeout-audio" src="./static/sound/timeout.mp3"></audio>
 
@@ -47,17 +47,10 @@
 </div>
 
 <div class="container" style="margin:auto;margin-bottom: 10px;width:70%;min-width:920px;">
-    <div class="dropdown" style="text-align: left;margin-bottom:5px;">
-        <button class="btn btn-secondary dropdown-toggle navbar-left" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		    Example: Join Elimination
-	    </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item sample-btn sample1" href="#">Example: Join Elimination</a>
-            <a class="dropdown-item sample-btn sample2" href="#">Example: Disjunct. Select 1</a>
-            <a class="dropdown-item sample-btn sample3" href="#">Example: Disjunct. Select 2</a>
-            <a class="dropdown-item sample-btn sample4" href="#">Example: Conjuctive Select</a>
-            <a class="dropdown-item sample-btn sample5" href="#">Example: Common Exp. Elim.</a>
-        </div>
+    <div class="nav-bar" style="text-align: left;margin-bottom:5px;">
+        <span id="problem-number" style="font-size:18px"> Problem 1 </span>
+        <span id="query-status" style="font-size:18px;color:red"></span>
+        <span id="total-score" style="font-size:18px;float:right"> Total Score: 0</span>
     </div>
     <div id="wrapper">
         <div class="editor-outer">
@@ -73,37 +66,81 @@
                 <div id="feedback"></div>
             </div>
         </div>
-        <button type="button" style="margin-top:5px; margin-bottom:5px;" class="text-center btn btn-success submit-btn">Submit</button>
+        <span style="font-size:18px"> Is q1 equivalent to q2? </span>
+        <button id="yes-btn" type="button" style="margin-top:5px; margin-bottom:5px;" class="text-center btn btn-success submit-btn">Yes</button>
+        <button id="no-btn" type="button" style="margin-top:5px; margin-bottom:5px;" class="text-center btn btn-success submit-btn">No</button>
+        <button id="next-btn" type="button" style="margin-top:5px; margin-bottom:5px;" class="text-center btn btn-success submit-btn">Next</button>
         <br>
         <a class="text-center" href="http://cosette.cs.washington.edu"> Back to Cosette Website </a> 
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="start-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Please set your information. (Just this once)</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Begin Cosette Challenge</h5>
+          </div>
+          <div class="modal-body">
+          	<div class="form-group" style="text-align: left;">
+    			  <label for="challenger-name-input" style="font-weight: bold;">Your Name:</label>
+    			  <input type="text" class="form-control" id="challenger-name-input" aria-describedby="emailHelp" placeholder="Enter your name">
+    		    </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Start</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="correct-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Your answer is correct! You beat Cosette. </h5>
+          </div>
+          <div class="modal-footer">
+            <button id="correct-next" type="button" class="btn btn-primary" data-dismiss="modal">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="incorrect-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Your answer is not correct. Cosette Beat you!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button id="incorrect-next" type="button" class="btn btn-primary" data-dismiss="modal">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Congrats! You finished Cosette Challenge.</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-          	<div class="form-group" style="text-align: left;">
-    			<label for="username-input" style="font-weight: bold;">Username</label>
-    			<input type="text" class="form-control" id="username-input" aria-describedby="emailHelp" placeholder="Enter username">
-    			<small id="emailHelp" class="form-text text-muted">Please try to use the same username that you've used before.</small>
-    			<label for="institution-input" style="font-weight: bold;margin-top:10px;">Institution</label>
-    			<input type="text" class="form-control" id="institution-input" aria-describedby="emailHelp" placeholder="Enter institution">
-    			<label for="email-input" style="font-weight: bold;margin-top:10px;">Email (optional)</label>
-    			<input type="text" class="form-control" id="email-input" aria-describedby="emailHelp" placeholder="Enter email (optional)">
-  			</div>
+          	<span id="result-msg"> Your beat Cosette in 1 out of 5 problems. </span>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            <button id="restart" type="button" class="btn btn-primary" data-dismiss="modal">Restart</button>
           </div>
         </div>
       </div>
     </div>
+
 </div><!-- /.container -->
 
     

@@ -83,22 +83,151 @@ function gen_counterexamples_html(counterexamples){
 }
 
 $(function () {
+    
+    var timeout_value = 7000; // 7 sec
 
-    if (!Cookies.get('username')) {
-        $('#myModal').modal('show');
+    // TODO: generate a random permutation
+    var queries = [[join_elim, true], [conjunct_select, true], [common_exp, true], 
+                   [disjunct_select_right, true], [disjunct_select_wrong, false]];
+    
+    var challenger_name  = "";
+    var current_problem = 0;
+    var score = 0;  // number of correct answers
+
+    var yes_audio = document.getElementById("yes-audio");
+    var no_audio = document.getElementById("no-audio");
+    var timeout_audio = document.getElementById("timeout-audio");
+    var timeout_flags = Array(queries.length).fill(true);
+
+    if(challenger_name == ""){
+        $('#start-modal').modal('show');
     }
 
-    $('#myModal').on('hidden.bs.modal', function (e) {
-        if ($('#username-input').val() == "" || $('#institution-input').val() == "") {
-            $('#myModal').modal('show');
+    $('#start-modal').on('hidden.bs.modal', function (e) {
+        if ($('#challenger-name-input').val() == "") {
+            $('#start-modal').modal('show');
         } else {
-            Cookies.set('username', $('#username-input').val());
-            Cookies.set('institution', $('#institution-input').val());
-            if ($('#email-input').val() != "") {
-                Cookies.set('email', $('#email-input').val());
-            }
+            challenger_name = $('#challenger-name-input').val();
+            editor.setValue(queries[current_problem][0], -1);
+            $("#feedback").text("");
+            setTimeout(user_timeout.bind(null, current_problem), timeout_value);
         }
     });
+
+    function show_result(problem_num){
+        $("#feedback").text("FAKE RESULT, TBD.");
+    }
+
+    function user_timeout(problem_num){
+        if(timeout_flags[problem_num]){ // if the user don't do any thing
+            $("#query-status").text("Timeout!");
+            timeout_audio.play();
+            show_result(problem_num);
+        }
+    }
+
+    function result_msg(score){
+        return "Your beat Cosette in " + score + " out of " + queries.length + " problems."
+    }
+
+    function score_text(score){
+        return "Total Score: " + score; 
+    }
+
+    function next(){
+        current_problem += 1;
+        $("#problem-number").text("Problem "+ (current_problem+1));
+        editor.setValue(queries[current_problem][0], -1);
+        $("#feedback").text("");
+        $("#query-status").text("");
+        setTimeout(user_timeout.bind(null, current_problem), timeout_value);
+    }
+
+    function restart(){
+        current_problem = 0;
+        challenger_name = "";
+        score = 0;
+        $("#total-score").text(score_text(score));
+        $("#problem-number").text("Problem "+ (current_problem+1));
+        editor.setValue(queries[current_problem][0], -1);
+        $("#feedback").text("");
+    }
+
+    $('#yes-btn').click(function(){
+        timeout_flags[current_problem] = false; 
+        show_result(current_problem);
+        if(queries[current_problem][1]){ // the user gets it right 
+            score += 1;
+            if(current_problem == queries.length -1){ // finished
+                $("#result-msg").text("Your answer is correct. " + result_msg(score));
+                $("#result-modal").modal('show');
+            }
+            else { 
+                $("#correct-modal").modal('show');
+            }
+            $("#total-score").text(score_text(score));
+            yes_audio.play();
+        }
+        else { // the user gets it wrong
+            if(current_problem == queries.length -1){ // finished
+                $("#result-msg").text("Your last answer is Wrong. " + result_msg(score));
+                $("#result-modal").modal('show');
+            }
+            else {
+                $("#incorrect-modal").modal('show');             
+            }
+            no_audio.play();
+        }
+    });
+
+    $('#no-btn').click(function(){  
+        timeout_flags[current_problem] = false;
+        //show_result(current_problem);
+        if(queries[current_problem][1]){ // the user gets it wrong 
+            if(current_problem == queries.length -1){ // finished
+                $("#result-msg").text("Your last answer is correct. " + result_msg(score));
+                $("#result-modal").modal('show');
+            }
+            else { 
+                $("#incorrect-modal").modal('show');
+            }
+            $("#total-score").text(score_text(score));
+            no_audio.play();
+            show_result(current_problem);
+        }
+        else { // the user gets it right
+            score += 1;
+            if(current_problem == queries.length -1){ // finished
+                $("#result-msg").text("Your last answer is Wrong. " + result_msg(score));
+                $("#result-modal").modal('show');
+            }
+            else {
+                $("#correct-modal").modal('show');
+            }
+            yes_audio.play();
+        }
+    });
+
+    $('#next-btn').click(function(){  
+        timeout_flags[current_problem] = false;  
+        if (current_problem == queries.length - 1) { // finished
+            $("#result-msg").text(result_msg(score));
+            $("#result-modal").modal('show');
+        }
+        else {
+            next();
+        }
+    });
+
+    $('#correct-modal').on('hidden.bs.modal', function (e) {
+        next();
+    });
+
+    $('#incorrect-next').click(next);
+
+    $('#correct-next').click(next);
+
+    $('#restart').click(restart);
 
     $('.submit-btn').click(function () {
         var query = editor.getValue();
@@ -122,8 +251,6 @@ $(function () {
                 } else { //error
                     $("#feedback").text(result["error_msg"]);
                 }
-
-                $("#yes-audio").play();
             }
         });
     });
