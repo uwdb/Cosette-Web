@@ -2,12 +2,20 @@
  main.js - cosette web index
 */
 
-var join_elim = "/* define schema s1, \n   here s1 can contain any number of attributes, \n   but it has to at least contain integer attributes \n   x and y */\nschema s1(x:int, ya:int, ??);\n\nschema s2(yb:int, ??);        -- define schema s2\n\ntable a(s1);            -- define table a using schema s1\ntable b(s2);            -- define table b using schema s1\n\nquery q1                -- define query q1 on tables a and b\n`select distinct x.x as ax from a x, b y\n where x.ya = y.yb`;\n\nquery q2                -- define query q2 likewise\n`select distinct x.x as ax from a x, a y, b z \n where x.x = y.x and x.ya = z.yb`;\n\nverify q1 q2;           -- does q1 equal to q2?";
+var simple_1 = "/* schema s, has two attributes a and b */\nschema s(a:int, b:int);       \n\n/* table r has schema s */\ntable r(s); \n\n/* query q1 */\nquery q1\n`select x.a as a \n from r x`;\n\n/* query q2 */\nquery q2\n`select x.b as b\n from r x`;\n\n/* does q1 equal to q2? */\nverify q1 q2;";
+var join_elim = "/* define schema s1, \n   here s1 can contain any number of attributes, \n   but it has to at least contain integer attributes \n   x and y */\nschema s1(x:int, ya:int, ??);\n\nschema s2(yb:int, ??);        -- define schema s2\n\ntable a(s1);            -- define table a using schema s1\ntable b(s2);            -- define table b using schema s1\n\nquery q1                -- define query q1 on tables a and b\n`select distinct x.x as ax \n from a x, b y\n where x.ya = y.yb`;\n\nquery q2                -- define query q2 likewise\n`select distinct x.x as ax \n from a x, a y, b z \n where x.x = y.x and x.ya = z.yb`;\n\nverify q1 q2;           -- does q1 equal to q2?";
+var join_elim_wrong = "/* define schema s1, \n   here s1 can contain any number of attributes, \n   but it has to at least contain integer attributes \n   x and y */\nschema s1(x:int, ya:int, ??);\n\nschema s2(yb:int, ??);        -- define schema s2\n\ntable a(s1);            -- define table a using schema s1\ntable b(s2);            -- define table b using schema s1\n\nquery q1                -- define query q1 on tables a and b\n`select distinct x.x as ax \n from a x, b y\n where x.ya = y.yb`;\n\nquery q2                -- define query q2 likewise\n`select distinct x.x as ax \n from a x, a y, b z \n where x.x = y.x`;\n\nverify q1 q2;           -- does q1 equal to q2?";
 var conjunct_select = "/* schema s, here ?? means s can contain \n   any number of attributes */\nschema s(??);       \n\n/* table r has schema s */\ntable r(s); \n\n/* symbolic predicate b1 on s. \n   This means that b1 is a predicate that takes \n   in a tuple with schema s */\npredicate b1(s);\n\n/* symbolic predicate b2 on s */\npredicate b2(s);    \n\n/* query q1 */\nquery q1\n`select * from r x where b1(x) and b2(x)`;\n\n/* query q2 */\nquery q2\n`select * from (select * from r x where b1(x)) y \n where b2(y)`;\n\n/* does q1 equal to q2? */\nverify q1 q2;";
 var common_exp = "/* define schema s1,\n   here s1 can contain any number of attributes, \n   but it has to at least contain integer attributes \n   x and y */\nschema s1(x:int, y:int, ??);\n\ntable a(s1);                   -- table a of schema s1\n\nquery q1                       -- query 1\n`select (x.x + x.x) as ax\n from a x where x.x = x.y`;\n\nquery q2                       -- query 2\n`select (x.x + x.y) as ax\n from a x where x.x = x.y`;\n\nverify q1 q2;                  -- verify the equivalence";
-var disjunct_select_wrong = "/* define schema s1, \n   here s1 can contain any number of attributes */\nschema s(??);\n\n/* define table r using schema s1 */\ntable r(s);\n\n/* symbolic predicate b1 on s. \n   This means that b1 is a predicate that takes \n   in a tuple with schema s */\npredicate b1(s);\npredicate b2(s);    -- symbolic predicate b2 on s\n\nquery q1\n`select * from r x where b1(x) or b2(x)`;\n\nquery q2\n`select *\n from ((select * from r x where b1(x)) \n       union all (select * from r y where b2(y))) x`;\n \nverify q1 q2;";
+var disjunct_select_wrong = "/* define schema s1, \n   here s1 can contain any number of attributes */\nschema s(??);\n\n/* define table r using schema s1 */\ntable r(s);\n\n/* symbolic predicate b1 on s. \n   This means that b1 is a predicate that takes \n   in a tuple with schema s */\npredicate b1(s);\npredicate b2(s);    -- symbolic predicate b2 on s\n\nquery q1\n`select * \n from r x \n where b1(x) or b2(x)`;\n\nquery q2\n`select *\n from ((select * from r x where b1(x)) \n       union all (select * from r y where b2(y))) x`;\n \nverify q1 q2;";
 var disjunct_select_right = "/* define schema s1, \n   here s1 can contain any number of attributes */\nschema s(??);\n\n/* define table r using schema s1 */\ntable r(s);\n\n/* symbolic predicate b1 on s. \n   This means that b1 is a predicate that takes \n   in a tuple with schema s */\npredicate b1(s);\npredicate b2(s);    -- symbolic predicate b2 on s\n\nquery q1\n`select distinct * from r x where b1(x) or b2(x)`;\n\nquery q2\n`select distinct *\n from ((select * from r x where b1(x)) \n       union all (select * from r y where b2(y))) x`;\n \nverify q1 q2;";
-
+var simple_1_r = {"rosette_log": "Rosette find an counterexample.", "coq_result": "UNKNOWN", "coq_log": "", "result": "NEQ", "counterexamples": [{"table-content": [["a", "b"], [[[1, 0], 1]]], "table-name": "r"}], "rosette_result": "NEQ"};
+var join_elim_r = {"rosette_result": "UNSAT", "rosette_log": "", "coq_result": "EQ", "result": "EQ", "coq_log": ""};
+var conjunct_select_r = {"rosette_result": "UNSAT", "rosette_log": "", "coq_result": "EQ", "result": "EQ", "coq_log": ""};
+var common_exp_r = {"rosette_result": "UNSAT", "rosette_log": "", "coq_result": "EQ", "result": "EQ", "coq_log": ""};
+var disjunct_select_wrong_r = {"rosette_log": "Rosette find an counterexample.", "coq_result": "UNKNOWN", "coq_log": "", "result": "NEQ", "counterexamples": [{"table-content": [["unknowns"], [[[3], 1]]], "table-name": "r"}], "rosette_result": "NEQ"};
+var disjunct_select_right_r = {"rosette_result": "UNSAT", "rosette_log": "", "coq_result": "EQ", "result": "EQ", "coq_log": ""};
+var join_elim_wrong_r = {"rosette_log": "Rosette find an counterexample.", "coq_result": "UNKNOWN", "coq_log": "", "result": "NEQ", "counterexamples": [{"table-content": [["yb", "unknowns"], [[[1, "sv$1"], 4]]], "table-name": "b"}, {"table-content": [["x", "ya", "unknowns"], [[["sv$2", 0, "sv$4"], 12]]], "table-name": "a"}], "rosette_result": "NEQ"};
 // editor setting
 $("#editor").text(join_elim);
 var editor = ace.edit("editor");
@@ -87,8 +95,10 @@ $(function () {
     var timeout_value = 7000; // 7 sec
 
     // TODO: generate a random permutation
-    var queries = [[join_elim, true], [conjunct_select, true], [common_exp, true], 
-                   [disjunct_select_right, true], [disjunct_select_wrong, false]];
+    var queries = [[simple_1, false, simple_1_r], [join_elim_wrong, false, join_elim_wrong_r], 
+                   [conjunct_select, true, conjunct_select_r], [disjunct_select_wrong, false, disjunct_select_wrong_r],
+                   [common_exp, true, common_exp_r], [join_elim, true, join_elim_r], 
+                   [disjunct_select_right, true, disjunct_select_right_r]];
     
     var challenger_name  = "";
     var current_problem = 0;
@@ -115,7 +125,18 @@ $(function () {
     });
 
     function show_result(problem_num){
-        $("#feedback").text("FAKE RESULT, TBD.");
+        var result = queries[problem_num][2];
+        var answer = result["result"];
+        if (answer === "NEQ") {
+            var ros = result["counterexamples"];
+            $("#feedback").html(gen_counterexamples_html(ros));
+        } else if (answer === "EQ") {
+            $("#feedback").text("Two queries are equivalent.");
+        } else if (answer === "UNKNOWN") {
+            $("#feedback").text("Two queries' equivalence is unknown. Solver runs out of time.");
+        } else { //error
+            $("#feedback").text(result["error_msg"]);
+        }
     }
 
     function user_timeout(problem_num){
@@ -182,7 +203,7 @@ $(function () {
 
     $('#no-btn').click(function(){  
         timeout_flags[current_problem] = false;
-        //show_result(current_problem);
+        show_result(current_problem);
         if(queries[current_problem][1]){ // the user gets it wrong 
             if(current_problem == queries.length -1){ // finished
                 $("#result-msg").text("Your last answer is correct. " + result_msg(score));
@@ -193,7 +214,6 @@ $(function () {
             }
             $("#total-score").text(score_text(score));
             no_audio.play();
-            show_result(current_problem);
         }
         else { // the user gets it right
             score += 1;
@@ -229,6 +249,7 @@ $(function () {
 
     $('#restart').click(restart);
 
+    /*
     $('.submit-btn').click(function () {
         var query = editor.getValue();
         $("#feedback").text("");
@@ -253,7 +274,7 @@ $(function () {
                 }
             }
         });
-    });
+    }); */
 
     var $solving = $('#solving').hide();
     $(document)
