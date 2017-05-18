@@ -240,10 +240,6 @@ $(function () {
         }
     });
 
-    $('#correct-modal').on('hidden.bs.modal', function (e) {
-        next();
-    });
-
     $('#incorrect-next').click(next);
 
     $('#correct-next').click(next);
