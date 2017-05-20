@@ -88,6 +88,7 @@ def solve():
         res["username"] = username
         res["email"] = email
         res["instituion"] = institution
+        res["cosette_code"] = cos_query
         try:
             log_query(res)
         except Exception as e:
