@@ -7,6 +7,8 @@ var conjunct_select = "/* schema s, here ?? means s can contain \n   any number 
 var common_exp = "/* define schema s1,\n   here s1 can contain any number of attributes, \n   but it has to at least contain integer attributes \n   x and y */\nschema s1(x:int, y:int, ??);\n\ntable a(s1);                   -- table a of schema s1\n\nquery q1                       -- query 1\n`select (x.x + x.x) as ax\n from a x where x.x = x.y`;\n\nquery q2                       -- query 2\n`select (x.x + x.y) as ax\n from a x where x.x = x.y`;\n\nverify q1 q2;                  -- verify the equivalence";
 var disjunct_select_wrong = "/* define schema s1, \n   here s1 can contain any number of attributes */\nschema s(??);\n\n/* define table r using schema s1 */\ntable r(s);\n\n/* symbolic predicate b1 on s. \n   This means that b1 is a predicate that takes \n   in a tuple with schema s */\npredicate b1(s);\npredicate b2(s);    -- symbolic predicate b2 on s\n\nquery q1\n`select * from r x where b1(x) or b2(x)`;\n\nquery q2\n`select *\n from ((select * from r x where b1(x)) \n       union all (select * from r y where b2(y))) x`;\n \nverify q1 q2;";
 var disjunct_select_right = "/* define schema s1, \n   here s1 can contain any number of attributes */\nschema s(??);\n\n/* define table r using schema s1 */\ntable r(s);\n\n/* symbolic predicate b1 on s. \n   This means that b1 is a predicate that takes \n   in a tuple with schema s */\npredicate b1(s);\npredicate b2(s);    -- symbolic predicate b2 on s\n\nquery q1\n`select distinct * from r x where b1(x) or b2(x)`;\n\nquery q2\n`select distinct *\n from ((select * from r x where b1(x)) \n       union all (select * from r y where b2(y))) x`;\n \nverify q1 q2;";
+var cse344exam1 = "schema user_schema(uid:int, uname:int, city:int);\nschema pic_schema(uid:int, size:int);\n\ntable user(user_schema);\ntable picture(pic_schema);\n\nquery q1 \n`select x.uid as uid, x.uname as uname, \n        (select count(*) as cnt from picture y\n         where x.uid = y.uid and y.size > 1000000) as cnt\n from user x\n where x.city = 3`;\n\nquery q2\n `select x.uid as uid, x.uname as uname, count(*) as cnt\n  from user x, picture y\n  where x.uid = y.uid and y.size > 1000000 and x.city = 3\n  group by x.uid, x.uname`;\n\nverify q1 q2;";
+var countbug = "schema s(pnum:int, shipdate:int);\nschema p(pnum:int, qoh:int);\n\ntable parts(p);\ntable supply(s);\n\nquery q1\n`select x.pnum as xp\n from parts x\n where x.qoh = (select count(y.shipdate) as cnt\n                 from supply y\n          where y.pnum = x.pnum AND y.shipdate < 10)`;\n\nquery q2\n`select x.pnum as xp\n from parts x, (select y.pnum as suppnum, count(y.shipdate) as ct\n                from supply y where y.shipdate < 10\n                group by y.pnum) temp\n where x.qoh = temp.ct AND x.pnum = temp.suppnum`;\n\nverify q1 q2;";
 
 // editor setting
 $("#editor").text(join_elim);
@@ -157,6 +159,18 @@ $(function () {
 
     $('.sample5').click(function () {
         editor.setValue(common_exp, -1);
+        $("#feedback").text("");
+        $("#dropdownMenuButton").text($(this).text());
+    });
+
+    $('.sample6').click(function () {
+        editor.setValue(countbug, -1);
+        $("#feedback").text("");
+        $("#dropdownMenuButton").text($(this).text());
+    });
+
+    $('.sample7').click(function () {
+        editor.setValue(cse344exam1, -1);
         $("#feedback").text("");
         $("#dropdownMenuButton").text($(this).text());
     });
