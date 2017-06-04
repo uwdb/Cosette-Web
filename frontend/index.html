@@ -33,6 +33,10 @@
 
 <body>
 
+<div class="token-show" style="float: right;margin-right: 30px;">
+    <a href="#" class="show-key-anchor">Show API Key</a>
+</div>
+
 <div class="starter-template">
     <h1>Cosette</h1>
     <p class="subtitle text-center">Cosette is an automated solver for checking equivalences of SQL queries. Your star or feedback is appreciated!</p>
@@ -78,28 +82,46 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Please set your information. (Just this once)</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <h5 class="modal-title" id="exampleModalLabel">Please Register for Cosette</h5>
           </div>
           <div class="modal-body">
           	<div class="form-group" style="text-align: left;">
-    			<label for="username-input" style="font-weight: bold;">Username</label>
-    			<input type="text" class="form-control" id="username-input" aria-describedby="emailHelp" placeholder="Enter username">
-    			<small id="emailHelp" class="form-text text-muted">Please try to use the same username that you've used before.</small>
-    			<label for="institution-input" style="font-weight: bold;margin-top:10px;">Institution</label>
-    			<input type="text" class="form-control" id="institution-input" aria-describedby="emailHelp" placeholder="Enter institution">
-    			<label for="email-input" style="font-weight: bold;margin-top:10px;">Email (optional)</label>
-    			<input type="text" class="form-control" id="email-input" aria-describedby="emailHelp" placeholder="Enter email (optional)">
+    			<input type="text" class="form-control" style="margin-bottom:10px" id="name-input" placeholder="Name">
+    			<input type="text" class="form-control" style="margin-bottom:10px" id="email-input" placeholder="Email">
+                <div class="form-control-feedback email-taken" style="display: none; color: #d9534f;margin-top:-11px;margin-bottom:5px;margin-left:5px;">Email already registered.</div>
+    			<input type="password" class="form-control" style="margin-bottom:10px" id="pass-input" placeholder="Password">
+                <div class="form-control-feedback invalid-creds" style="display: none; color: #d9534f;margin-top:-11px;margin-bottom:5px;margin-left:5px;">Invalid credentials.</div>
+    			<input type="text" class="form-control" style="margin-bottom:10px" id="institution-input" placeholder="Institution">
   			</div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            <div style="text-align:center;">
+                <button type="button" style="width:150px;" class="btn btn-primary register-btn">Register</button>
+                <div>
+                    <span style="color:#757575;font-size:14px;" class="or-text">or</span> <br class='or-text'/>
+                    <button type="button" style="width:150px;" class="btn btn-secondary login-btn">Log In</button>
+                </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+
+    <div class="modal fade" id="keyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Cosette API Key</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+             </button>
+          </div>
+          <div class="modal-body" style="word-wrap: break-word; text-align:left;">
+              <span class="api-key"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </div><!-- /.container -->
 
     

@@ -84,19 +84,85 @@ function gen_counterexamples_html(counterexamples){
 
 $(function () {
 
-    if (!Cookies.get('username')) {
-        $('#myModal').modal('show');
+    if (!Cookies.get('token')) {
+        $('#myModal').modal({backdrop: 'static', keyboard: false});
     }
 
-    $('#myModal').on('hidden.bs.modal', function (e) {
-        if ($('#username-input').val() == "" || $('#institution-input').val() == "") {
-            $('#myModal').modal('show');
-        } else {
-            Cookies.set('username', $('#username-input').val());
-            Cookies.set('institution', $('#institution-input').val());
-            if ($('#email-input').val() != "") {
-                Cookies.set('email', $('#email-input').val());
+    $('.register-btn').click(function() {
+        var name = $('#name-input').val();
+        var email = $('#email-input').val();
+        var pass = $('#pass-input').val();
+        var inst = $('#institution-input').val();
+
+        if (!name || !email || !pass || !inst) {
+            return false;
+        }
+
+        $.ajax({
+            url: '/register',
+            method: 'POST',
+            data: {
+                "name": name,
+                "email": email,
+                "password": pass,
+                "institution": inst
+            },
+            success: function (data) {
+                var res = $.parseJSON(data)
+                var stat = res['status'];
+                if (stat == 1) {
+                    console.log('email taken');
+                    $('.email-taken').show();
+                } else if (stat == 0) {
+                    Cookies.set('token', res['token']);
+                    $('#myModal').modal('hide');
+                }
             }
+        });
+    });
+
+    $('.show-key-anchor').click(function() {
+        $('.api-key').text(Cookies.get('token'));
+        $('#keyModal').modal();
+    });
+
+    var logging_in = false;
+
+    $('.login-btn').click(function() {
+        if (!logging_in) {
+            logging_in = true;
+            $('#name-input').hide();
+            $('#institution-input').hide();
+            $('.register-btn').hide();
+            $('.or-text').hide();
+            $('.login-btn').addClass('btn-primary');
+            $('.login-btn').removeClass('btn-secondary');
+        } else {
+            var email = $('#email-input').val();
+            var pass = $('#pass-input').val();
+
+            if (!email || !pass) {
+                return false;
+            }
+
+            $.ajax({
+                url: '/login',
+                method: 'POST',
+                data: {
+                    'email': email,
+                    'password': pass
+                },
+                success: function (data) {
+                    var res = $.parseJSON(data);
+                    var stat = res['status'];
+                    if (stat == 0) {
+                        Cookies.set('token', res['token'])
+                        $('#myModal').modal('hide');
+                    } else {
+                        $('.invalid-creds').show();
+                    }
+                }
+            });
         }
     });
 

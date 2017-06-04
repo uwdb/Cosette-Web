@@ -1,7 +1,9 @@
 # Docker for prod site
 FROM shumo/cosette-frontend
 
-RUN apt-get install -yqq python-pip
+RUN apt-get update
+
+RUN apt-get install -yqq python-pip libpq-dev python-dev
 
 RUN git clone https://github.com/uwdb/Cosette-Web.git
 
