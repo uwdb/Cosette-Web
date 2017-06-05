@@ -63,14 +63,19 @@ def log_query(query):
     conn.close()
 
 
-# Index page for GET
 @app.route('/')
 def index():
+    """ index page for get """
     return render_template('index.html')
 
-# Solve api call
-@app.route('/solve', methods = ['POST'])
+@app.route('/challenge')
+def challenge():
+    """ cosette challenge for sigmod """
+    return render_template('challenge.html')
+
+@app.route('/solve', methods=['POST'])
 def solve():
+    """ solve cosette queries """
     # there should be a username in the cookies
     if 'token' in request.cookies:
         token = request.cookies['token']
@@ -156,5 +161,6 @@ def register():
 
 @app.route('/compiled/<path:file>')
 def serve_compiled(file):
+    """ show compiled files, deprecated """
     compiled_dir = os.path.abspath('Cosette/.compiled')
     return send_from_directory(compiled_dir, file, mimetype='text/plain')

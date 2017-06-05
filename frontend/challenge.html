@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>The Cosette Challenge</title>
+<script src="./static/scripts/jquery-3.1.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="./static/lib/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="./static/css/main.css">
+
+<script src="./static/lib/js.cookie.js" style="text/javascript" charset="utf-8"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    table {
+        margin-bottom: 15px;
+    }
+
+    th, td {
+        padding: 5px;
+    }
+</style>
+
+</head>
+
+<body>
+
+<audio id="yes-audio" src="./static/sound/yes.m4a"></audio>
+<audio id="no-audio" src="./static/sound/no.mp3"></audio>
+<audio id="timeout-audio" src="./static/sound/timeout.mp3"></audio>
+
+<div class="starter-template">
+    <h1>The Grand Cosette Challenge</h1>
+    <p class="subtitle text-center">Can you beat cosette on checking equivalences of SQL queries?</p>
+    <div>
+        <a class="github-button" href="https://github.com/uwdb/cosette" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star uwdb/cosette on GitHub">Star</a>
+        <a class="github-button" href="https://github.com/uwdb/cosette/issues" data-size="large" data-icon="octicon-issue-opened" aria-label="Issue uwdb/cosette on GitHub">Issue</a>
+    </div>
+</div>
+
+<div class="container" style="margin:auto;margin-bottom: 10px;width:70%;min-width:920px;">
+    <div class="nav-bar" style="text-align: left;margin-bottom:5px;">
+        <span id="problem-number" style="font-size:18px"> Problem 1 </span>
+        <span id="query-status" style="font-size:18px;color:red"></span>
+        <span id="total-score" style="font-size:18px;float:right"> Total Score: 0</span>
+    </div>
+    <div id="wrapper">
+        <div class="editor-outer">
+            <div id="editor"></div>
+        </div>
+        <div class="well">
+            <div class="feedback-outer">
+                <div class="well-header">Result</div>
+                <div id="solving" style="display:none;">
+                Solving ...
+                <img src="./static/img/solving.gif" alt="solving" />
+                </div>
+                <div id="feedback"></div>
+            </div>
+        </div>
+        <span style="font-size:18px"> Is q1 equivalent to q2? </span>
+        <button id="yes-btn" type="button" style="margin-top:5px; margin-bottom:5px;" class="text-center btn btn-success submit-btn">Yes</button>
+        <button id="no-btn" type="button" style="margin-top:5px; margin-bottom:5px;" class="text-center btn btn-success submit-btn">No</button>
+        <button id="next-btn" type="button" style="margin-top:5px; margin-bottom:5px;" class="text-center btn btn-success submit-btn">Next</button>
+        <br>
+        <a class="text-center" href="http://cosette.cs.washington.edu"> Back to Cosette Website </a> 
+    </div>
+
+    <div class="modal fade" id="start-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Begin Cosette Challenge</h5>
+          </div>
+          <div class="modal-body">
+          	<div class="form-group" style="text-align: left;">
+    			  <label for="challenger-name-input" style="font-weight: bold;">Your Name:</label>
+    			  <input type="text" class="form-control" id="challenger-name-input" aria-describedby="emailHelp" placeholder="Enter your name">
+    		    </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Start</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="correct-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Your answer is correct! You beat Cosette. </h5>
+          </div>
+          <div class="modal-footer">
+            <button id="correct-next" type="button" class="btn btn-primary" data-dismiss="modal">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="incorrect-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Your answer is not correct. Cosette Beat you!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button id="incorrect-next" type="button" class="btn btn-primary" data-dismiss="modal">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Congrats! You finished Cosette Challenge.</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          	<span id="result-msg"> Your beat Cosette in 1 out of 5 problems. </span>
+          </div>
+          <div class="modal-footer">
+            <button id="restart" type="button" class="btn btn-primary" data-dismiss="modal">Restart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div><!-- /.container -->
+
+    
+<script src="./static/scripts/challenge.js">
+
+</script>
+</body>
+</html>
