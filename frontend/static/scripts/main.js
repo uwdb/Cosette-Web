@@ -87,7 +87,7 @@ function gen_counterexamples_html(counterexamples){
 $(function () {
 
     if (!Cookies.get('token')) {
-        $('#myModal').modal({backdrop: 'static', keyboard: false});
+        $('#regModal').modal({backdrop: 'static', keyboard: false});
     }
 
     $('.register-btn').click(function() {
@@ -97,6 +97,7 @@ $(function () {
         var inst = $('#institution-input').val();
 
         if (!name || !email || !pass || !inst) {
+            alert("Please fill in all the forms");
             return false;
         }
 
@@ -112,12 +113,12 @@ $(function () {
             success: function (data) {
                 var res = $.parseJSON(data)
                 var stat = res['status'];
-                if (stat == 1) {
+                if (stat == 'error') {
                     console.log('email taken');
                     $('.email-taken').show();
-                } else if (stat == 0) {
+                } else if (stat == 'success') {
                     Cookies.set('token', res['token']);
-                    $('#myModal').modal('hide');
+                    $('#regModal').modal('hide');
                 }
             }
         });
@@ -144,6 +145,7 @@ $(function () {
             var pass = $('#pass-input').val();
 
             if (!email || !pass) {
+                alert("Please fill in all the forms");
                 return false;
             }
 
@@ -157,9 +159,9 @@ $(function () {
                 success: function (data) {
                     var res = $.parseJSON(data);
                     var stat = res['status'];
-                    if (stat == 0) {
+                    if (stat == 'success') {
                         Cookies.set('token', res['token'])
-                        $('#myModal').modal('hide');
+                        $('#regModal').modal('hide');
                     } else {
                         $('.invalid-creds').show();
                     }

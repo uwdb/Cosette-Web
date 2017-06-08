@@ -109,11 +109,11 @@ def login():
 
     if len(rows) > 0:
         if pbkdf2_sha256.verify(attempt, rows[0][0]):
-            return json.dumps({'status': 0, 'token': rows[0][1]})
+            return json.dumps({'status': 'success', 'token': rows[0][1]})
         else:
-            return json.dumps({'status': 1})
+            return json.dumps({'status': 'error', 'error': 'wrong password'})
     else:
-        return json.dumps({'status': 1})
+        return json.dumps({'status': 'error', 'error': 'email does not exist'})
 
 @app.route('/register', methods = ['POST'])
 def register():
@@ -139,7 +139,7 @@ def register():
 
     if len(rows) > 0:
         # email already registered
-        return json.dumps({'status': 1})
+        return json.dumps({'status': 'error'})
     else:
         users_cols = ['name', 'email', 'institution', 'password', 'api_key']
         pass_hashed = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
@@ -156,7 +156,7 @@ def register():
         conn.commit()
         cur.close()
         conn.close()
-        return json.dumps({'status': 0, 'token': api_key})
+        return json.dumps({'status': 'success', 'token': api_key})
 
 
 @app.route('/compiled/<path:file>')
