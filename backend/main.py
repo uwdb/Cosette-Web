@@ -15,6 +15,21 @@ template_dir = os.path.abspath('../frontend')
 static_dir = os.path.abspath('../frontend/static')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
+class setup_connection:
+    def __enter__(self):
+        db_hostname = os.environ['COS_DB_HOST']
+        db_username = os.environ['COS_DB_USERNAME']
+        db_password = os.environ['COS_DB_PASSWORD']
+        db_name = os.environ['COS_DB_DATABASE']
+
+        self.conn = psycopg2.connect(host=db_hostname, user=db_username,
+                                password=db_password, dbname=db_name)
+        return self.conn.cursor()
+
+    def __exit__(self, type, value, traceback):
+        self.conn.commit()
+        self.conn.close()
+
 def log_query(query):
     """ log query in database """
     assert isinstance(query, dict)
@@ -23,44 +38,33 @@ def log_query(query):
         """ helper function return field value or default """
         return query[field] if field in query else default
 
-    # write to database
-    db_hostname = os.environ['COS_DB_HOST']
-    db_username = os.environ['COS_DB_USERNAME']
-    db_password = os.environ['COS_DB_PASSWORD']
-    db_name = os.environ['COS_DB_DATABASE']
-
     # counterexample should converted to string if it is a list
     counterexamples = get_or_default("counterexamples")
     if isinstance(counterexamples, list):
         counterexamples = json.dumps(counterexamples)
 
-    conn = psycopg2.connect(host=db_hostname, user=db_username,
-                            password=db_password, dbname=db_name)
     db_columns = ["username", "email", "timestamp", "cosette_code", "result",
                   "institution", "coq_result", "rosette_result", "coq_log",
                   "rosette_log", "error_msg", "counterexamples", "coq_source",
                   "rosette_source", "api_key"]
-    cur = conn.cursor()
-    cur.execute('INSERT INTO queries ({}) VALUES ({})'.format(
-        ", ".join(db_columns), ", ".join(["%s"]*len(db_columns))),
-                (get_or_default("username"),
-                 get_or_default("email"),
-                 time.time() * 1000,
-                 get_or_default("cosette_code"),
-                 get_or_default("result"),
-                 get_or_default("instituion"),
-                 get_or_default("coq_result"),
-                 get_or_default("rosette_result"),
-                 get_or_default("coq_log"),
-                 get_or_default("rosette_log"),
-                 get_or_default("error_msg"),
-                 counterexamples,
-                 get_or_default("coq_source"),
-                 get_or_default("rosette_source"),
-                 get_or_default("api_key")))
-    conn.commit()
-    cur.close()
-    conn.close()
+    with setup_connection() as cur:
+        cur.execute('INSERT INTO queries ({}) VALUES ({})'.format(
+            ", ".join(db_columns), ", ".join(["%s"]*len(db_columns))),
+                    (get_or_default("username"),
+                     get_or_default("email"),
+                     time.time() * 1000,
+                     get_or_default("cosette_code"),
+                     get_or_default("result"),
+                     get_or_default("instituion"),
+                     get_or_default("coq_result"),
+                     get_or_default("rosette_result"),
+                     get_or_default("coq_log"),
+                     get_or_default("rosette_log"),
+                     get_or_default("error_msg"),
+                     counterexamples,
+                     get_or_default("coq_source"),
+                     get_or_default("rosette_source"),
+                     get_or_default("api_key")))
 
 
 @app.route('/')
@@ -96,24 +100,17 @@ def login():
     email = request.form.get('email')
     attempt = request.form.get('password')
 
-    db_hostname = os.environ['COS_DB_HOST']
-    db_username = os.environ['COS_DB_USERNAME']
-    db_password = os.environ['COS_DB_PASSWORD']
-    db_name = os.environ['COS_DB_DATABASE']
-    conn = psycopg2.connect(host=db_hostname, user=db_username,
-                            password=db_password, dbname=db_name)
-    
-    cur = conn.cursor()
-    cur.execute("SELECT password, api_key FROM users WHERE email='{}'".format(email))
-    rows = cur.fetchall()
+    with setup_connection() as cur:
+        cur.execute("SELECT password, api_key FROM users WHERE email='{}'".format(email))
+        rows = cur.fetchall()
 
-    if len(rows) > 0:
-        if pbkdf2_sha256.verify(attempt, rows[0][0]):
-            return json.dumps({'status': 'success', 'token': rows[0][1]})
+        if len(rows) > 0:
+            if pbkdf2_sha256.verify(attempt, rows[0][0]):
+                return json.dumps({'status': 'success', 'token': rows[0][1]})
+            else:
+                return json.dumps({'status': 'error', 'error': 'wrong password'})
         else:
-            return json.dumps({'status': 'error', 'error': 'wrong password'})
-    else:
-        return json.dumps({'status': 'error', 'error': 'email does not exist'})
+            return json.dumps({'status': 'error', 'error': 'email does not exist'})
 
 @app.route('/register', methods = ['POST'])
 def register():
@@ -126,37 +123,30 @@ def register():
         # not enough fields
         return json.dumps({'status': 2})
     
-    db_hostname = os.environ['COS_DB_HOST']
-    db_username = os.environ['COS_DB_USERNAME']
-    db_password = os.environ['COS_DB_PASSWORD']
-    db_name = os.environ['COS_DB_DATABASE']
-    conn = psycopg2.connect(host=db_hostname, user=db_username,
-                            password=db_password, dbname=db_name)
-    
-    cur = conn.cursor()
-    cur.execute("SELECT 1 FROM users WHERE email='{}'".format(email))
-    rows = cur.fetchall()
+    with setup_connection() as cur:
+        cur.execute("SELECT 1 FROM users WHERE email='{}'".format(email))
+        rows = cur.fetchall()
 
-    if len(rows) > 0:
-        # email already registered
-        return json.dumps({'status': 'error'})
-    else:
-        users_cols = ['name', 'email', 'institution', 'password', 'api_key']
-        pass_hashed = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
-        api_key = os.urandom(64).encode('hex')
-        
-        cur.execute('INSERT INTO users ({}) VALUES ({})'.format(
-            ", ".join(users_cols), ", ".join(["%s"]*len(users_cols))),
-                    (name,
-                     email,
-                     institution,
-                     pass_hashed,
-                     api_key,
-                     ))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return json.dumps({'status': 'success', 'token': api_key})
+        if len(rows) > 0:
+            # email already registered
+            return json.dumps({'status': 'error'})
+        else:
+            users_cols = ['name', 'email', 'institution', 'password', 'api_key']
+            pass_hashed = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
+            api_key = os.urandom(64).encode('hex')
+            
+            cur.execute('INSERT INTO users ({}) VALUES ({})'.format(
+                ", ".join(users_cols), ", ".join(["%s"]*len(users_cols))),
+                        (name,
+                         email,
+                         institution,
+                         pass_hashed,
+                         api_key,
+                         ))
+            conn.commit()
+            cur.close()
+            conn.close()
+            return json.dumps({'status': 'success', 'token': api_key})
 
 
 @app.route('/compiled/<path:file>')
