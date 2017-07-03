@@ -1,6 +1,6 @@
 # Cosette-Web
 
-Cosette-Web is for serving Cosette web interface. You can try [Cosette Demo](http://demo.cosette.cs.washington.edu/) or use the Web API [Cosette Web API](http://cosette.cs.washington.edu/) without the need of running the web server on your own. The following instructions are for the users who want to build and run Cosette web server on their own (It is not that hard too!).
+Cosette-Web is for serving Cosette web interface. You can try [Cosette Demo](http://demo.cosette.cs.washington.edu/) or use the  [Cosette Web API](http://cosette.cs.washington.edu/) without the need of running the web server on your own. The following instructions are for the users who want to build and run Cosette web server on their own (It is not that hard too!).
 
 ### Install and Run Postgres (for user registration)
 
