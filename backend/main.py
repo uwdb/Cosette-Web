@@ -122,7 +122,7 @@ def register():
     if not (name and password and email and institution):
         # not enough fields
         return json.dumps({'status': 2})
-    
+
     with setup_connection() as cur:
         cur.execute("SELECT 1 FROM users WHERE email='{}'".format(email))
         rows = cur.fetchall()
@@ -134,18 +134,14 @@ def register():
             users_cols = ['name', 'email', 'institution', 'password', 'api_key']
             pass_hashed = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
             api_key = os.urandom(64).encode('hex')
-            
             cur.execute('INSERT INTO users ({}) VALUES ({})'.format(
                 ", ".join(users_cols), ", ".join(["%s"]*len(users_cols))),
                         (name,
                          email,
                          institution,
                          pass_hashed,
-                         api_key,
-                         ))
-            conn.commit()
-            cur.close()
-            conn.close()
+                         api_key))
+            cur.close()           
             return json.dumps({'status': 'success', 'token': api_key})
 
 
