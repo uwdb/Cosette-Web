@@ -6,35 +6,43 @@ Cosette-Web is for serving Cosette web interface. You can try [Cosette Demo](htt
 
 On Mac (assume you have installed [brew](https://brew.sh/)), 
 
-``` brew install postgresql ```
+  ``` brew install postgresql ```
 
 Start postgres:
 
-``` pg_ctl -D /usr/local/var/postgres start && brew services start postgresql ```
+  ``` pg_ctl -D /usr/local/var/postgres start && brew services start postgresql ```
 
 Check if the installation is successful:
 
-``` postgres -V ```
+  ``` postgres -V ```
 
 You should see something like that:
 
-``` postgres (PostgreSQL) 9.6.3 ```
+  ``` postgres (PostgreSQL) 9.6.3 ```
 
 Now change the `pg_hba.conf` file (the default location of this file is `/usr/local/var/postgres/`), to listen connection from docker container. Add the following line to `pg_hba.conf`
 
-``` host    all             all             10.200.10.1/24          trust ```
+  ``` host    all             all             10.200.10.1/24          trust ```
 
 And let postgres listen to all address by change the `listen_addresses` in `postgresql.conf` (the default location of this file is `/usr/local/var/postgres/`) to :
 
-```listen_addresses = '*'```
+  ```listen_addresses = '*'```
 
 Now restart postgres:
 
-``` brew services restart postgresql ```
+  ``` brew services restart postgresql ```
 
 And make an alias of you host:
 
 ```  sudo ifconfig lo0 alias 10.200.10.1/24 ```
+
+Now enter postgres shell using `psql postgres`, and create a user named `cosette`:
+
+  ``` CREATE ROLE cosette WITH LOGIN PASSWORD 'cosetteisawesome'; ```
+
+and create a database named `cosette`:
+
+  ``` CREATE DATABASE cosette; ```
 
 
 ### Build Docker
