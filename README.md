@@ -59,7 +59,7 @@ This will pull a pre-build docker image from docker hub and enter the docker con
 Note:
 1. You can replace `/usr/bin/fish` with your favorite shell.
 
-2. If you want to debug, assume you cloned this repo and under the root folder of this repo now.  Add ` -v $(pwd)/:/Cosette-Web-Dev` to mount current fold to `/Cosette-Web-Dev`.
+2. If you want to debug, assume you cloned this repo and under the root folder of this repo now.  Add ` -v $(pwd)/:/Cosette-Web-Dev` to mount current folder to `/Cosette-Web-Dev`.
 
 ### Run the server 
 
