@@ -2,7 +2,7 @@
 
 Cosette-Web is for serving Cosette web interface. You can try [Cosette Demo](http://demo.cosette.cs.washington.edu/) or use the Web API [Cosette Web API](http://cosette.cs.washington.edu/) without the need of running the web server on your own. The following instructions are for the users who want to build and run Cosette web server on their own (It is not that hard too!).
 
-#### Install and Run Postgres (for user registration)
+### Install and Run Postgres (for user registration)
 
 On Mac (assume you have installed [brew](https://brew.sh/)), 
 
@@ -37,7 +37,7 @@ And make an alias of you host:
 ```  sudo ifconfig lo0 alias 10.200.10.1/24 ```
 
 
-#### Build Docker
+### Build Docker
 
 Assume you have installed [docker](https://www.docker.com/community-edition#/download). Simply run:
 
@@ -50,7 +50,7 @@ Note:
 
 2. If you want to debug, assume you cloned this repo and under the root folder of this repo now.  Add ` -v $(pwd)/:/Cosette-Web-Dev` to mount current fold to `/Cosette-Web-Dev`.
 
-#### Run the server 
+### Run the server 
 
 In the docker container's shell:
 
@@ -68,6 +68,6 @@ you should see something like:
 * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
 ```
 
-#### Now you can use Cosette Web interface
+### Now you can use Cosette Web interface
 
 Now you can access cosette web interface from your browser on [http://0.0.0.0:5000/](http://0.0.0.0:5000/)
