@@ -44,6 +44,9 @@ and create a database named `cosette`:
 
   ``` CREATE DATABASE cosette; ```
 
+Now exit postgres shell by `\q`, and run `setup.sql` by:
+
+ ``` psql -U cosette -d cosette -a -f setup.sql ```
 
 ### Build Docker
 
