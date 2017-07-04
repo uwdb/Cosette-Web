@@ -52,7 +52,7 @@ Now exit postgres shell by `\q`, and run `setup.sql` by:
 
 Assume you have installed [docker](https://www.docker.com/community-edition#/download). Simply run:
 
-``` docker run --name cosette --entrypoint /usr/bin/fish  -p 5000:5000 COS_DB_HOST=10.200.10.1 -e COS_DB_USERNAME=cosette -e COS_DB_DATABASE=cosette -e COS_DB_PASSWORD='cosetteisawesome' -ti shumo/cosette-frontend ```
+``` docker run --name cosette --entrypoint /usr/bin/fish  -p 5000:5000 -e COS_DB_HOST=10.200.10.1 -e COS_DB_USERNAME=cosette -e COS_DB_DATABASE=cosette -e COS_DB_PASSWORD='cosetteisawesome' -ti shumo/cosette-frontend ```
 
 This will pull a pre-build docker image from docker hub and enter the docker containers shell (fish in this case).
 
