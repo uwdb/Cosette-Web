@@ -176,7 +176,7 @@ $(function () {
         $.ajax({
             url: '/solve',
             method: 'POST',
-            data: { "query": query },
+            data: { "query": query, "api_key": Cookies.get('token') },
             success: function (data) {
                 var result = $.parseJSON(data);
                 var html = "";

@@ -1,13 +1,12 @@
 """ Main api routes for frontend """
 
 import os
-from flask import Flask, render_template, request, send_from_directory, abort
-import logging
+import json
+import time
+from flask import Flask, render_template, request, send_from_directory, abort, make_response
 from logging.handlers import RotatingFileHandler
 import Cosette.solver as solver
 import psycopg2
-import time
-import json
 from passlib.hash import pbkdf2_sha256
 
 
@@ -23,7 +22,7 @@ class setup_connection:
         db_name = os.environ['COS_DB_DATABASE']
 
         self.conn = psycopg2.connect(host=db_hostname, user=db_username,
-                                password=db_password, dbname=db_name)
+                                     password=db_password, dbname=db_name)
         return self.conn.cursor()
 
     def __exit__(self, type, value, traceback):
@@ -66,6 +65,16 @@ def log_query(query):
                      get_or_default("rosette_source"),
                      get_or_default("api_key")))
 
+def validate_api_key(api_key):
+    """ validate api key in database, return (True, <Name>, <Email>) if validated"""
+    with setup_connection() as cur:
+        cur.execute("SELECT name, email FROM users WHERE api_key='{}'".format(api_key))
+        rows = cur.fetchall()
+        if len(rows) == 0:
+            return (False, 'None', 'None')
+        else:
+            return (True, rows[0][0], rows[0][1])
+
 
 @app.route('/')
 def index():
@@ -80,23 +89,29 @@ def challenge():
 @app.route('/solve', methods=['POST'])
 def solve():
     """ solve cosette queries """
-    # there should be a username in the cookies
-    if 'token' in request.cookies:
-        token = request.cookies['token']
-        cos_query = request.form.get('query')
+    cos_query = request.form.get('query')
+    api_key = request.form.get('api_key')
+    try:
+        valid, username, email = validate_api_key(api_key)
+    except Exception as e:
+        return make_response(e.message, 500)
+    if valid:
         res_string = solver.solve(cos_query, "./Cosette", True)
         res = json.loads(res_string)
-        res["api_key"] = token
+        res["username"] = username
+        res["email"] = email
+        res["api_key"] = api_key
         try:
             log_query(res)
         except Exception as e:
             res["error_msg"] = e.message
         return json.dumps(res)
     else:
-        abort(403)
+        return json.dumps({"error_msg": "ERROR: you api_key is not valid."})
 
 @app.route('/login', methods = ['POST'])
 def login():
+    """ user login """
     email = request.form.get('email')
     attempt = request.form.get('password')
 
@@ -114,6 +129,7 @@ def login():
 
 @app.route('/register', methods = ['POST'])
 def register():
+    """ new user registration """
     name = request.form.get('name')
     password = request.form.get('password')
     email = request.form.get('email')
@@ -133,7 +149,7 @@ def register():
         else:
             users_cols = ['name', 'email', 'institution', 'password', 'api_key']
             pass_hashed = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
-            api_key = os.urandom(64).encode('hex')
+            api_key = os.urandom(16).encode('hex')
             cur.execute('INSERT INTO users ({}) VALUES ({})'.format(
                 ", ".join(users_cols), ", ".join(["%s"]*len(users_cols))),
                         (name,
