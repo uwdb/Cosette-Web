@@ -6,7 +6,9 @@ ipaddress==1.0.17
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
+passlib==1.7.1
 psycopg2==2.7.1
+PyGreSQL==5.0.3
 requests==2.12.4
 six==1.10.0
 websocket-client==0.40.0
