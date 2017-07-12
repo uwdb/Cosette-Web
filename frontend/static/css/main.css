@@ -42,6 +42,12 @@ nav {
 	height: 460px;
 }
 
+#source-code {
+	white-space: pre-wrap;
+	text-align: left;
+	overflow: scroll;
+}
+
 .feedback-outer {
 	border: 1px solid Grey;
 	padding: 5px 3px 5px 8px;

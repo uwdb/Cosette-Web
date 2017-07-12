@@ -48,6 +48,13 @@ function process_header_name(hn){
     }
 }
 
+var unknown_result = "Two queries' equivalence is unknown. Solver runs out of time.";
+var eq_result = "<p> Two queries are equivalent. </p>";
+var source_links = " <br> <a onClick=\"show_rosette_source()\" href=\"#\"> Generated Rosette Code </a> <br> <a onClick=\"show_coq_source();\" href=\"#\"> Generated Coq Code </a>";
+
+var coq_source = "";
+var rosette_source = "";
+
 // it takes a json object: counterexamples
 function gen_counterexamples_html(counterexamples){
     var html = "";
@@ -83,6 +90,26 @@ function gen_counterexamples_html(counterexamples){
     }
     return html;
 }
+
+function show_rosette_source(){
+        $('#source-label').text("Generated Rosette Code");
+        $('#source-code').text(rosette_source);
+        $('#source-code').attr("class", "scheme hljs"); //no Racket/rosette, but close enough
+        $('#source-code').each(function(i, block){
+            hljs.highlightBlock(block);
+        });
+        $('#sourceModal').modal('show');
+    }
+
+function show_coq_source(){
+        $('#source-label').text("Generated Coq Code");
+        $('#source-code').text(coq_source);
+        $('#source-code').attr("class", "coq hljs");
+        $('#source-code').each(function(i, block){
+            hljs.highlightBlock(block);
+        });
+        $('#sourceModal').modal('show');
+    }
 
 $(function () {
 
@@ -180,15 +207,17 @@ $(function () {
             success: function (data) {
                 var result = $.parseJSON(data);
                 var html = "";
-                var answer = result["result"]
+                var answer = result["result"];
+                coq_source = result["coq_source"];
+                rosette_source = result["rosette_source"];
                 console.log(result);
                 if (answer === "NEQ") {
                     var ros = result["counterexamples"];
-                    $("#feedback").html(gen_counterexamples_html(ros));
+                    $("#feedback").html(gen_counterexamples_html(ros)+source_links);
                 } else if (answer === "EQ") {
-                    $("#feedback").text("Two queries are equivalent.");
+                    $("#feedback").html(eq_result+source_links);
                 } else if (answer === "UNKNOWN") {
-                    $("#feedback").text("Two queries' equivalence is unknown. Solver runs out of time.");
+                    $("#feedback").text(unknown_result+source_links);
                 } else { //error
                     $("#feedback").text(result["error_msg"]);
                 }
