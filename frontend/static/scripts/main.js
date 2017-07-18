@@ -273,7 +273,7 @@ $(function () {
         $("#dropdownMenuButton").text($(this).text());
     });
 
-    $('.sample9').click(function () {
+    $('.sample8').click(function () {
         editor.setValue(selection_dist_union, -1);
         $("#feedback").text("");
         $("#dropdownMenuButton").text($(this).text());
