@@ -127,7 +127,7 @@ $(function () {
         var inst = $('#institution-input').val();
 
         if (!name || !email || !pass || !inst) {
-            alert("Please fill in all the forms");
+            alert("Please fill in all the entries");
             return false;
         }
 
