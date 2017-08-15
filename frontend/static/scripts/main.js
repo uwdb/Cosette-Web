@@ -11,6 +11,8 @@ var cse344exam1 = "schema user_schema(uid:int, uname:int, city:int);\nschema pic
 var countbug = "schema s(pnum:int, shipdate:int);\nschema p(pnum:int, qoh:int);\n\ntable parts(p);\ntable supply(s);\n\nquery q1\n`select x.pnum as xp\n from parts x\n where x.qoh = (select count(y.shipdate) as cnt\n                 from supply y\n          where y.pnum = x.pnum AND y.shipdate < 10)`;\n\nquery q2\n`select x.pnum as xp\n from parts x, (select y.pnum as suppnum, count(y.shipdate) as ct\n                from supply y where y.shipdate < 10\n                group by y.pnum) temp\n where x.qoh = temp.ct AND x.pnum = temp.suppnum`;\n\nverify q1 q2;";
 var selection_dist_union = "schema s(??);\n\ntable r(s);\ntable s(s);\n\npredicate p(s);\n\nquery q1\n`(select * from r x where p(x)) union all\n (select * from s y where p(y))`;\n\nquery q2\n`select *\n from ( r union all s) x\n where p(x)`;\n \nverify q1 q2; ";
 
+var simple_eq = "-- define schema r with attributes a and b\nschema s(a:int, b:int); \n\ntable r(s);            -- define table r using schema s\n\nquery q1                -- define query q1 \n`select x.a as a \n from r x`;\n\nquery q2                -- define query q2 likewise\n`select y.a as a \n from r y`;\n\nverify q1 q2;           -- does q1 equal to q2?";
+
 // editor setting
 $("#editor").text(join_elim);
 var editor = ace.edit("editor");
@@ -279,5 +281,10 @@ $(function () {
         $("#dropdownMenuButton").text($(this).text());
     });
 
+    $('.sample9').click(function () {
+        editor.setValue(simple_eq, -1);
+        $("#feedback").text("");
+        $("#dropdownMenuButton").text($(this).text());
+    });
 
 });
