@@ -13,6 +13,10 @@ var selection_dist_union = "schema s(??);\n\ntable r(s);\ntable s(s);\n\npredica
 
 var simple_eq = "-- define schema r with attributes a and b\nschema s(a:int, b:int); \n\ntable r(s);            -- define table r using schema s\n\nquery q1                -- define query q1 \n`select x.a as a \n from r x`;\n\nquery q2                -- define query q2 likewise\n`select y.a as a \n from r y`;\n\nverify q1 q2;           -- does q1 equal to q2?";
 
+var join_proj_trans = "schema s1(a:int, b:int, ??);\n\nschema s2(a:int, b:int, ??);        -- define schema s2\n\ntable r1(s1);            -- define table a using schema s1\ntable r2(s2);            -- define table b using schema s1\n\nquery q1                -- define query q1 on tables a and b\n`select x.b as xb, y.b as yb \n from r1 x, r2 y`;\n\nquery q2                -- define query q2 likewise\n`select x1.xb as xb, y1.yb as yb \n from (select x.b as xb from r1 x) x1, \n      (select y.b as yb from r2 y) y1`;\n\nverify q1 q2;           -- does q1 equal to q2?";
+
+var join_commute = "/* define schema s1, \n   here s1 can contain any number of attributes, \n   but it has to at least contain integer attributes \n   x  */\nschema s1(x1:int, ??);\n\nschema s2(x2:int, ??);        -- define schema s2\n\ntable a(s1);            -- define table a using schema s1\ntable b(s2);            -- define table b using schema s1\n\nquery q1                -- define query q1 on tables a and b\n`select x.* \n from a x, b y\n where x.x1 = y.x2`;\n\nquery q2                -- define query q2 likewise\n`select x.*\n from b y, a x \n where x.x1 = y.x2`;\n\nverify q1 q2;           -- does q1 equal to q2?";
+
 // editor setting
 $("#editor").text(join_elim);
 var editor = ace.edit("editor");
@@ -283,6 +287,18 @@ $(function () {
 
     $('.sample9').click(function () {
         editor.setValue(simple_eq, -1);
+        $("#feedback").text("");
+        $("#dropdownMenuButton").text($(this).text());
+    });
+
+    $('.sample10').click(function () {
+        editor.setValue(join_commute, -1);
+        $("#feedback").text("");
+        $("#dropdownMenuButton").text($(this).text());
+    });
+
+    $('.sample11').click(function () {
+        editor.setValue(join_proj_trans, -1);
         $("#feedback").text("");
         $("#dropdownMenuButton").text($(this).text());
     });
