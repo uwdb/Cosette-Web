@@ -55,7 +55,7 @@ function process_header_name(hn){
     }
 }
 
-var unknown_result = "Two queries' equivalence is unknown. Solver runs out of time.";
+var unknown_result = "<p> Two queries' equivalence is unknown. Solver runs out of time. </p>";
 var eq_result = "<p> Two queries are equivalent. </p>";
 var source_links = " <br> <a onClick=\"show_rosette_source()\" href=\"#\"> Generated Rosette Code </a> <br> <a onClick=\"show_coq_source();\" href=\"#\"> Generated Coq Code </a>";
 
@@ -224,7 +224,7 @@ $(function () {
                 } else if (answer === "EQ") {
                     $("#feedback").html(eq_result+source_links);
                 } else if (answer === "UNKNOWN") {
-                    $("#feedback").text(unknown_result+source_links);
+                    $("#feedback").html(unknown_result+source_links);
                 } else { //error
                     $("#feedback").text(result["error_msg"]);
                 }
