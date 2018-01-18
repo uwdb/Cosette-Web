@@ -85,14 +85,31 @@ function addStudentUI(studentName, questionName) {
 
 $(document).ready(function() {
 
-    var API_KEY = "836d6af86353ab67473891c5cea43f2a";
+    var API_KEY = "none";
     var SEPARATOR = "|*|";
 
     var TEMPLATE_INPUT = "";
 
     $("#submit-btn").click(readFilesAndSubmit);
+    
+    $('.conn-settings-btn').click(function() {
+        $('#conn-modal').modal('show');
+        return false;
+    });
+
+    $('.conn-save-btn').click(function() {
+        $('#conn-modal').modal('hide');
+        if ($('#dbConnInput').val() && $('#numSqlRetries').val()) {
+            $('.conn-checkmark').show();
+        } else {
+            $('.conn-checkmark').hide();
+        }
+        return false;
+    });
+
 
     $('.template-insert-btn').click(function() {
+        return false;
         $('.template-input').val(TEMPLATE_INPUT);
         $('#template-modal').modal('show');
         return false;
@@ -715,7 +732,7 @@ $(document).ready(function() {
         }
     }
 
-//    $('#login-modal').modal('show');
+    //$('#login-modal').modal({backdrop: 'static', keyboard: false});
 
     $('.login-btn').click(function () {
         var email = $('#email-input').val();
@@ -735,6 +752,7 @@ $(document).ready(function() {
                     var stat = res['status'];
                     if (stat == 'success') {
                         Cookies.set('token', res['token'])
+                        API_KEY = res['token'];
                         $('#login-modal').modal('hide');
                     } else {
                         $('.invalid-creds').show();

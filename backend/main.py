@@ -166,6 +166,43 @@ def register():
             cur.close()           
             return json.dumps({'status': 'success', 'token': api_key})
 
+cached_resp = {}
+
+@app.route('/comparequery', methods=['POST'])
+def comparequery():
+    json = request.get_json()
+    instr = json['instr']
+    stud = json['stud']
+    conn = json['conn']
+    
+    db = sqlite3.connect(conn)
+    cur = db.cursor()
+    instr_ans = ''
+    if instr not in cached_resp:
+        cur.execute(instr)
+        instr_ans = cur.fetchall()
+    else:
+        instr_ans = cached_resp[instr]
+    
+    if stud not in cached_resp:
+        cur.execute(stud)
+        stud_ans = cur.fetchall()
+    else:
+        stud_ans = cached_resp[stud]
+    
+    # instr_ans = conn.execute(instr) if instr not in cached_resp else cached_resp[instr]
+    # stud_ans = conn.execute(stud) if stud not in cached_resp else cached_resp[stud]
+    cached_resp[instr] = instr_ans
+    cached_resp[stud] = stud_ans
+
+    eq = set(stud_ans) == set(instr_ans)
+    resp = jsonify(
+        result = "EQ_ON_DATASET" if eq else "NEQ_ON_DATASET",
+        counterexamples = "" if eq else "SQL queries were unequal on current dataset",
+        error_msg = "" if eq else "SQL queries were unequal on current dataset"
+    )
+    print(resp)
+    return resp
 
 
 @app.route('/compiled/<path:file>')

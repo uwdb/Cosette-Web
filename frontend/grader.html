@@ -60,6 +60,27 @@
                         <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
+                                    <h3 class="panel-title">Instructor Solutions</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <label class="btn btn-primary btn-file">
+                                    Browse <input id="instructorInput" type="file" directory webkitdirectory
+                                                  style="display: none;">
+                                </label>
+                                    <a id="instructorUploadsCollapseButton" class="btn btn-default btn-sm hidden" disabled role="button" data-toggle="collapse" href="#instructorUploadsCollapse" aria-expanded="false" aria-controls="instructorUploadsCollapse"></a>
+                                    <div id="instructorUploadsCollapse" class="collapse">
+                                        <div class="well">
+                                            <ul class="list-unstyled" id="instructorUploads"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
                                     <h3 class="panel-title">Schema</h3>
                                 </div>
                                 <div class="panel-body">
@@ -77,34 +98,24 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">Instructor Solutions</h3>
+                                    <h3 class="panel-title">Database Connections</h3>
                                 </div>
                                 <div class="panel-body">
-                                    <label class="btn btn-primary btn-file">
-                                    Browse <input id="instructorInput" type="file" directory webkitdirectory
-                                                  style="display: none;">
-                                </label>
-                                    <a id="instructorUploadsCollapseButton" class="btn btn-default btn-sm hidden" disabled role="button" data-toggle="collapse" href="#instructorUploadsCollapse" aria-expanded="false" aria-controls="instructorUploadsCollapse"></a>
-                                    <div id="instructorUploadsCollapse" class="collapse">
-                                        <div class="well">
-                                            <ul class="list-unstyled" id="instructorUploads"></ul>
-                                        </div>
-                                    </div>
+                                    <a href="#" class="btn btn-primary conn-settings-btn">Settings</a>
+                                    <span class="glyphicon glyphicon-ok conn-checkmark" style="display:none;margin-left:5px;color:green;"></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Grading Template</h3>
                                 </div>
                                 <div class="panel-body">
-                                    <a href="#" class="btn btn-primary template-insert-btn">Insert Template</a>
+                                    <a href="#" class="btn btn-primary template-insert-btn" disabled>Insert Template</a>
                                     <span class="glyphicon glyphicon-ok template-checkmark" style="display:none;margin-left:5px;color:green;"></span>
                                 </div>
                             </div>
@@ -139,6 +150,33 @@
 
         </div>
         <!-- /container -->
+		<div class="modal fade" id="conn-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" style="width:500px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" style="text-align:center;">Database Connections</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="dbConnInput">Sqlite DB Connection</label>
+    						<input type="text" class="form-control" id="dbConnInput" aria-describedby="emailHelp" placeholder="Enter connection info">
+						</div>
+						<div class="form-group">
+							<label for="numSqlRetries">Number of SQL Retries</label>
+    						<input type="text" class="form-control" id="numSqlRetries" aria-describedby="emailHelp" placeholder="Enter number of retries" value=2>
+						</div>
+						<div class="form-check">
+    						<input type="checkbox" class="form-check-input" id="onlySqlCheckbox">
+    						<label class="form-check-label" for="onlySqlCheckbox">Compare SQL only</label>
+  						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary conn-save-btn">Save</button>
+					</div>
+				</div><!-- /.modal-content -->
+		  	</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
 		<div class="modal fade" id="schema-modal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document" style="width:500px;">
 				<div class="modal-content">
@@ -221,9 +259,11 @@
 							<input type="password" class="form-control" style="margin-bottom:10px" id="pass-input" placeholder="Password">
 							<div class="form-control-feedback invalid-creds" style="display: none; color: #d9534f;margin-top:-11px;margin-bottom:5px;margin-left:5px;">Invalid credentials.</div>
 						</div>
+						<button type="button" class="pull-right btn btn-primary login-btn">Login</button>
+                        <div style="clear:both"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary login-btn">Login</button>
+                        <div style="text-align:center;">Need an account? <a href="/" style="color:blue">Register</a></div>
 					</div>
 				</div><!-- /.modal-content -->
 		  	</div><!-- /.modal-dialog -->
