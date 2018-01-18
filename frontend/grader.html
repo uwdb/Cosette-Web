@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Cosette Grader</title>
+
+    <!-- Bootstrap Flatly Theme -->
+    <link href="./static/grader/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome icons -->
+    <script src="https://use.fontawesome.com/2550f26337.js"></script>
+
+    <!-- Custom CSS -->
+    <link href="./static/grader/css/index.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="container" style="max-width:800px;">
+        <div class="row">
+            <div class="main-panel panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <h1 class="main-title">Cosette Grader</h1>
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Student Solutions</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <label class="btn btn-primary btn-file">
+                                    Browse <input id="studentInput" type="file" multiple directory
+                                                  webkitdirectory
+                                                  style="display: none;">
+                                </label>
+
+                                    <a id="studentUploadsCollapseButton" class="btn btn-default btn-sm hidden" disabled role="button" data-toggle="collapse" href="#studentUploadsCollapse" aria-expanded="false" aria-controls="studentUploadsCollapse"></a>
+                                    <div id="studentUploadsCollapse" class="collapse">
+                                        <div class="well">
+                                            <ul class="list-unstyled" id="studentUploads"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Schema</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <label class="btn btn-primary btn-file">
+                                    Browse <input id="schemaInput" type="file" directory webkitdirectory
+                                                  multiple
+                                                  style="display: none;">
+                                    </label>
+                                    <a id="schemaUploadsCollapseButton" class="btn btn-default btn-sm hidden" disabled role="button" data-toggle="collapse" href="#schemaUploadsCollapse" aria-expanded="false" aria-controls="schemaUploadsCollapse"></a>
+                                    <div id="schemaUploadsCollapse" class="collapse">
+                                        <div class="well">
+                                            <ul class="list-unstyled" id="schemaUploads"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Instructor Solutions</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <label class="btn btn-primary btn-file">
+                                    Browse <input id="instructorInput" type="file" directory webkitdirectory
+                                                  style="display: none;">
+                                </label>
+                                    <a id="instructorUploadsCollapseButton" class="btn btn-default btn-sm hidden" disabled role="button" data-toggle="collapse" href="#instructorUploadsCollapse" aria-expanded="false" aria-controls="instructorUploadsCollapse"></a>
+                                    <div id="instructorUploadsCollapse" class="collapse">
+                                        <div class="well">
+                                            <ul class="list-unstyled" id="instructorUploads"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Grading Template</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <a href="#" class="btn btn-primary template-insert-btn">Insert Template</a>
+                                    <span class="glyphicon glyphicon-ok template-checkmark" style="display:none;margin-left:5px;color:green;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <input id="submit-btn" class="btn btn-primary" type="submit" value="Submit" name="submit">
+                        </div>
+                    </div>
+                    <!-- This is hacky :( -->
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Results</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div id="feedback" class="row">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /container -->
+		<div class="modal fade" id="schema-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" style="width:500px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" style="text-align:center;">Select Schema</h4>
+					</div>
+					<div class="modal-body">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary dropdown-toggle schema-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Existing Schemas <span class="caret"></span>
+						  	</button>
+						  	<ul class="dropdown-menu">
+								<li><a href="#" class="schema-link">344q1</a></li>
+								<li><a href="#" class="schema-link">344q2</a></li>
+								<li><a href="#" class="schema-link">344q3</a></li>
+						  	</ul>
+						</div>
+                        <div class="btn-group" style="margin-left: 15px;">
+                            <button type="button" class="btn btn-danger btn-sm clear-schema">Clear</button>
+                        </div>
+                        <hr>
+                        <h4>Create a new Schema</h4>
+                        <div class="form-group">
+                            <label>Identifier</label>
+                            <input type="text" class="form-control" placeholder="Schema Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Schema</label>
+                            <textarea class="form-control template-schema-input" onkeyup="textAreaAdjust(this)" style="resize:none;" rows="2"></textarea>
+                        </div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary schema-save-btn">Save</button>
+					</div>
+				</div><!-- /.modal-content -->
+		  	</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+        
+		<div class="modal fade" id="template-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" style="width:500px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" style="text-align:center;">Grading Template Input</h4>
+					</div>
+					<div class="modal-body">
+                        <div class="form-group">
+                            <textarea class="form-control template-input" onkeyup="textAreaAdjust(this)" style="resize:none;" rows="2"></textarea>
+                        </div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary template-save-btn">Save</button>
+					</div>
+				</div><!-- /.modal-content -->
+		  	</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+
+		<div class="modal fade" id="counterex-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" style="width:400px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" style="text-align:center;">Counter Example</h4>
+					</div>
+					<div class="modal-body counterex-body">
+                        
+					</div>
+				</div><!-- /.modal-content -->
+		  	</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document" style="width:400px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" style="text-align:center;">Login to Cosette Grader</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group" style="text-align: left;">
+							<input type="text" class="form-control" style="margin-bottom:10px" id="email-input" placeholder="Email">
+							<input type="password" class="form-control" style="margin-bottom:10px" id="pass-input" placeholder="Password">
+							<div class="form-control-feedback invalid-creds" style="display: none; color: #d9534f;margin-top:-11px;margin-bottom:5px;margin-left:5px;">Invalid credentials.</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary login-btn">Login</button>
+					</div>
+				</div><!-- /.modal-content -->
+		  	</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="./static/grader/js/bootstrap.min.js"></script>
+
+        <script src="./static/lib/js.cookie.js"></script>
+
+        <!-- Custom JS -->
+        <script src="./static/grader/js/index.js"></script>
+</body>
+
+</html>

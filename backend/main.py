@@ -86,6 +86,12 @@ def challenge():
     """ cosette challenge for sigmod """
     return render_template('challenge.html')
 
+
+@app.route('/grader', methods=['GET'])
+def grader():
+    """ cosette grader """
+    return render_template('grader.html')
+
 @app.route('/solve', methods=['POST'])
 def solve():
     """ solve cosette queries """
@@ -159,6 +165,7 @@ def register():
                          api_key))
             cur.close()           
             return json.dumps({'status': 'success', 'token': api_key})
+
 
 
 @app.route('/compiled/<path:file>')

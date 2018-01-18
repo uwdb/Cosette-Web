@@ -1,0 +1,45 @@
+#cosetteIframe {
+    width: 100%;
+    height: 700px;
+}
+
+#instructorUploadsCollapse,
+#studentUploadsCollapse {
+    overflow: hidden;
+}
+
+body {
+    padding: 25px;
+}
+
+.main-panel {
+    border-color: #383838;
+}
+
+.main-title {
+    text-align: center;
+}
+
+#apiKeyField {
+    width: 100%;
+}
+
+table,
+th,
+td {
+    border: 1px solid black !important;
+    padding: 5px;
+}
+
+.result-anchor {
+    color: green;
+}
+
+.counterex-link, .counterex-link:hover {
+    color: red;
+    text-decoration: underline;
+}
+
+.eq-span {
+    color: green;
+}
