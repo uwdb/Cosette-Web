@@ -732,7 +732,7 @@ $(document).ready(function() {
         }
     }
 
-    //$('#login-modal').modal({backdrop: 'static', keyboard: false});
+    $('#login-modal').modal({backdrop: 'static', keyboard: false});
 
     $('.login-btn').click(function () {
         var email = $('#email-input').val();
