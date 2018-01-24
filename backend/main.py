@@ -3,11 +3,12 @@
 import os
 import json
 import time
-from flask import Flask, render_template, request, send_from_directory, abort, make_response
+from flask import Flask, render_template, request, send_from_directory, abort, make_response, jsonify
 from logging.handlers import RotatingFileHandler
 import Cosette.solver as solver
 import psycopg2
 from passlib.hash import pbkdf2_sha256
+import sqlite3
 
 
 template_dir = os.path.abspath('../frontend')
