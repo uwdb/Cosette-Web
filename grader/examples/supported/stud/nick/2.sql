@@ -1,0 +1,1 @@
+select distinct x.x as ax from a x, b y where x.ya > y.yb

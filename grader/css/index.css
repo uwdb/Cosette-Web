@@ -1,0 +1,38 @@
+#cosetteIframe {
+    width: 100%;
+    height: 700px;
+}
+
+#instructorUploadsCollapse,
+#studentUploadsCollapse {
+    overflow: hidden;
+}
+
+body {
+    background-image: url("../img/Pinstripe_Rain.png");
+    padding: 25px;
+}
+
+#apiKeyField {
+    width: 100%;
+}
+
+#feedback table,
+#feedback th,
+#feedback td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+button#execute {
+    margin: 20px 50px;
+    display: none;
+}
+
+input#dbfile {
+    display: inline-block;
+}
+
+pre#output {
+	margin: 10px;
+}

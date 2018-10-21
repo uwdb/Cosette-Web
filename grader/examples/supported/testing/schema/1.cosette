@@ -1,0 +1,43 @@
+schema sch_flights
+(
+	fid:int,
+    year:int,
+	month_id:string,
+	day_of_month:int,
+	day_of_week_id:int,
+	carrier_id:int,
+	flight_num:int,
+	origin_city:string,
+	origin_state:int,
+	dest_city:string,
+	dest_state:int,
+	departure_delay:int,
+	taxi_out:int,
+	arrival_delay:int,
+	canceled:int,
+	actual_time:int,
+	distance:int
+);
+
+schema sch_carriers
+(
+	cid:int,
+	name:int
+);
+
+SCHEMA sch_months
+(
+	mid:int,
+	month:int
+);
+
+SCHEMA sch_days
+(
+	did:int,
+	day_of_week:int
+);
+
+table Flights(sch_flights);
+table Carriers(sch_carriers);
+table Weekdays(sch_days);
+table Months(sch_months);

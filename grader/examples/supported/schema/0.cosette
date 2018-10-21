@@ -1,0 +1,6 @@
+schema s1(x:int, ya:int, ??);
+
+schema s2(yb:int, ??);        -- define schema s2
+
+table a(s1);            -- define table a using schema s1
+table b(s2);            -- define table b using schema s1

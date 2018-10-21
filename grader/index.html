@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Cosette Grader</title>
+
+    <!-- Bootstrap Flatly Theme -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome icons -->
+    <script src="https://use.fontawesome.com/2550f26337.js"></script>
+
+    <!-- Custom CSS -->
+    <link href="css/index.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <h1>Cosette Equivalence Checker</h1>
+                    </h1>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Student Submissions</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <label class="btn btn-primary btn-file">
+                                    Browse <input id="studentInput" type="file" multiple directory
+                                                  webkitdirectory
+                                                  style="display: none;">
+                                </label>
+
+                                    <a id="studentUploadsCollapseButton" class="btn btn-default btn-sm hidden" disabled role="button" data-toggle="collapse" href="#studentUploadsCollapse" aria-expanded="false" aria-controls="studentUploadsCollapse"></a>
+                                    <div id="studentUploadsCollapse" class="collapse">
+                                        <div class="well">
+                                            <ul class="list-unstyled" id="studentUploads"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Instructor Solutions</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <label class="btn btn-primary btn-file">
+                                    Browse <input id="instructorInput" type="file" directory webkitdirectory
+                                                  style="display: none;">
+                                </label>
+                                    <a id="instructorUploadsCollapseButton" class="btn btn-default btn-sm hidden" disabled role="button" data-toggle="collapse" href="#instructorUploadsCollapse" aria-expanded="false" aria-controls="instructorUploadsCollapse"></a>
+                                    <div id="instructorUploadsCollapse" class="collapse">
+                                        <div class="well">
+                                            <ul class="list-unstyled" id="instructorUploads"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Schema</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <label class="btn btn-primary btn-file">
+                                    Browse <input id="schemaInput" type="file" directory webkitdirectory
+                                                  multiple
+                                                  style="display: none;">
+                                    </label>
+                                    <a id="schemaUploadsCollapseButton" class="btn btn-default btn-sm hidden" disabled role="button" data-toggle="collapse" href="#schemaUploadsCollapse" aria-expanded="false" aria-controls="schemaUploadsCollapse"></a>
+                                    <div id="schemaUploadsCollapse" class="collapse">
+                                        <div class="well">
+                                            <ul class="list-unstyled" id="schemaUploads"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Database Connections</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            Scythe Sqlite DB Name<input id="dbConnInput" type="text">                                            
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            Compare SQL only: <input id="onlySqlCheckbox" type="checkbox">                                       
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            Number of SQL Retries: <input id="numSqlRetries" type="text" value="2">                               
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row sqlbuttons text-center">
+                        <div><button id="execute" class="btn btn-primary">Execute</button><label class="btn btn-default">Load SQLite database file: <input type='file' id='dbfile' ></label></div>
+                        <pre id="output">TABLE INFO</pre>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <input id="submit-btn" class="btn btn-primary" type="submit" value="Submit" name="submit">
+                        </div>
+                    </div>
+                    <!-- This is hacky :( -->
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Results</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div id="feedback" class="row">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <iframe id="cosetteIframe" class="row" src="https://demo.cosette.cs.washington.edu/"></iframe>
+
+        </div>
+        <!-- /container -->
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+
+        <!-- Custom JS -->
+        <script src="js/index.js"></script>
+        <script src="js/sql.js"></script>
+        <script type="text/javascript" src="js/comparesql.js"></script>
+</body>
+
+</html>
