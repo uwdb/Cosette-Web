@@ -11,4 +11,4 @@ PyGreSQL==5.0.3
 requests==2.20.0
 six==1.10.0
 websocket-client==0.40.0
-Werkzeug==0.15.3
+Werkzeug==0.16.0
